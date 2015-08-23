@@ -16,7 +16,7 @@ A WooCommerce plugin that adds a product settings tab for creating additional fe
 In the WooCommerce products edit screen, there will be a new product data tab called 'Product Fees' where you can:
 
 * Give the fee a custom name that is displayed to the customer at checkout describing the fee.
-* Enter the cost of the fee as either a flat rate number or as a percenatage.
+* Enter the cost of the fee as either a flat rate number or as a percentage.
 * Choose whether or not the fee should be multiplied based on the quantity of the product in the cart.
 
 = Features =
@@ -45,7 +45,7 @@ In the search field type “WooCommerce Product Fees” and click Search Plugins
 
 = Manual installation =
 
-The manual installation method involves downloading this plugin and uploading it to your webserver via your favourite FTP application. The WordPress codex contains [instructions on how to do this here](http://codex.wordpress.org/Managing_Plugins#Manual_Plugin_Installation).
+The manual installation method involves downloading this plugin and uploading it to your webserver via your favorite FTP application. The WordPress codex contains [instructions on how to do this here](http://codex.wordpress.org/Managing_Plugins#Manual_Plugin_Installation).
 
 = Updating =
 

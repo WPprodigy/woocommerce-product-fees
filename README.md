@@ -9,7 +9,7 @@ If you are not a developer, please use the WooCommerce Product Fees plugin page 
 WooCommerce Product Fees allows you to add additional fees at checkout based on products that are in the cart. In the WooCommerce products edit screen, there will be a new product data tab called 'Product Fees' where you can:
 
 * Give the fee a custom name that is displayed to the customer at checkout describing the fee.
-* Enter the cost of the fee as either a flat rate number or a percenatage.
+* Enter the cost of the fee as either a flat rate number or a percentage.
 * Choose whether or not the fee should be multiplied based on the quantity of the product in the cart.
 
 Product Settings: 
