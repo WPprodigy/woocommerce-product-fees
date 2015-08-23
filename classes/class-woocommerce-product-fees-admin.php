@@ -39,7 +39,7 @@ class Woocommerce_Product_Fees_Admin {
 
 	public function product_settings_fields() {
 
-		global $woocommerce, $post;
+		global $woocommerce;
 
 		echo '<div id="fees_product_data" class="fee_panel panel woocommerce_options_panel wc-metaboxes-wrapper">';
 		echo '<div class="options_group">';
