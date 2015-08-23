@@ -23,10 +23,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Check if WooCommerce is active
-if ( function_exists( 'is_woocommerce_active' ) ) {
-	if ( ! is_woocommerce_active() ) {
-		return;
-	}
+if ( ! class_exists( 'WooCommerce' ) ) {
+	return;
 }
 
 add_action( 'plugins_loaded', 'woocommerce_product_fees_load_after_plugins_loaded' );
