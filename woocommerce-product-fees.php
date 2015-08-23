@@ -22,16 +22,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Check if WooCommerce is active
-if ( ! class_exists( 'WooCommerce' ) ) {
-	return;
-}
-
 add_action( 'plugins_loaded', 'woocommerce_product_fees_load_after_plugins_loaded' );
 
 function woocommerce_product_fees_load_after_plugins_loaded() {
 
-	if ( ! class_exists( "Woocommerce_Product_Fees" ) ) {
+	if ( ! class_exists( "Woocommerce_Product_Fees" ) && class_exists( 'WooCommerce' ) ) {
 
 		require_once( 'classes/class-woocommerce-product-fees.php' );
 
