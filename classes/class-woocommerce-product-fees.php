@@ -15,6 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Lod the helper class to handle multiple currencies
+require_once 'class-currency-helper.php';
+
 class Woocommerce_Product_Fees {
 
 	public function __construct() {
@@ -30,14 +33,14 @@ class Woocommerce_Product_Fees {
 		// Add the fee
 		add_action( 'woocommerce_cart_calculate_fees', array( $this, 'get_product_fee_data' ) );
 
-	} 
+	}
 
 	/**
 	 * Load Text Domain
 	 */
 	public function text_domain() {
 
-	 	load_plugin_textdomain( 'woocommerce-product-fees', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' ); 
+	 	load_plugin_textdomain( 'woocommerce-product-fees', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 
 	}
 
@@ -49,7 +52,7 @@ class Woocommerce_Product_Fees {
  		global $woocommerce;
 
   		$woocommerce->cart->add_fee( __($fee_name, 'woocommerce-product-fees'), $fee_amount );
-	
+
 	}
 
 	/**
@@ -115,14 +118,14 @@ class Woocommerce_Product_Fees {
 			if ( $cart_product->id == $product_id ) {
 
 				$new_product_fee = $this->quantity_multiply( $product_fee, $cart_product_price, $quantity_multiply, $cart_product_qty );
-			
+
 				// Send multiplied fee data to add_product_fee()
 				$this->add_product_fee( $new_product_fee, $product_fee_name );
 
 			}
-		
+
 		}
-		
+
 	}
 
 	/**
@@ -141,13 +144,17 @@ class Woocommerce_Product_Fees {
 
 				$fee_name = get_post_meta( $cart_product->id, 'product-fee-name', true );
 				$fee_amount = get_post_meta( $cart_product->id, 'product-fee-amount', true );
+
+				// Convert the fee to the active currency
+				$fee_amount = WooCommerce_Product_Fees_Currency_Helper::get_price_in_currency($fee_amount);
+
 				$fee_multiplier = get_post_meta( $cart_product->id, 'product-fee-multiplier', true );
 
 				// Send fee data to product_specific_fee()
 				$this->product_specific_fee( $cart_product->id, $fee_amount, $fee_name, $fee_multiplier );
 
 			}
-		
+
 		}
 
 	}
