@@ -34,7 +34,7 @@ class WooCommerce_Product_Fees_Currency_Helper {
    * @return array An array of currency codes.
    */
   public static function enabled_currencies() {
-    return apply_filters('wc_aelia_cs_enabled_currencies', array(get_option('woocommerce_currency')));
+    return apply_filters('wc_aelia_cs_enabled_currencies', array(self::shop_base_currency()));
   }
 
   /**
