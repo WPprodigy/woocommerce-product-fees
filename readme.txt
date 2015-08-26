@@ -3,7 +3,7 @@ Contributors: iCaleb
 Tags: woocommerce, woocommerce fees, woocommerce surcharge, product fees, product surcharge, additional fees, product based fees
 Requires at least: 4.0
 Tested up to: 4.3
-Stable tag: 2.4.5
+Stable tag: 1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,9 @@ Bugs can be reported either in our support forum or preferably on the [WooCommer
 2. Fees shown at checkout.
 
 == Changelog ==
+
+= 1.1 - 08/26/2015 =
+* Added full support for multiple currency setups.
 
 = 1.0 - 08/25/2015 =
 * Feature - Percentage based fees.
