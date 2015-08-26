@@ -15,6 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Lod the helper class to handle multiple currencies
+require_once 'class-currency-helper.php';
+
 class Woocommerce_Product_Fees {
 
 	public function __construct() {
@@ -30,14 +33,14 @@ class Woocommerce_Product_Fees {
 		// Add the fee
 		add_action( 'woocommerce_cart_calculate_fees', array( $this, 'get_product_fee_data' ) );
 
-	} 
+	}
 
 	/**
 	 * Load Text Domain
 	 */
 	public function text_domain() {
 
-	 	load_plugin_textdomain( 'woocommerce-product-fees', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' ); 
+	 	load_plugin_textdomain( 'woocommerce-product-fees', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 
 	}
 
@@ -49,7 +52,7 @@ class Woocommerce_Product_Fees {
  		global $woocommerce;
 
   		$woocommerce->cart->add_fee( __($fee_name, 'woocommerce-product-fees'), $fee_amount );
-	
+
 	}
 
 	/**
@@ -115,14 +118,58 @@ class Woocommerce_Product_Fees {
 			if ( $cart_product->id == $product_id ) {
 
 				$new_product_fee = $this->quantity_multiply( $product_fee, $cart_product_price, $quantity_multiply, $cart_product_qty );
-			
+
 				// Send multiplied fee data to add_product_fee()
 				$this->add_product_fee( $new_product_fee, $product_fee_name );
 
 			}
-		
+
 		}
-		
+
+	}
+
+	/**
+	 * Returns the fee associated with a product, if any. This method is
+	 * multi-currency aware, and it's able to retrieve the specific fee that applies
+	 * for the active currency. If none is found, then the fee in product's base
+	 * currency is taken and converted automatically, using exchange rates.
+	 *
+	 * @param int product_id A product ID.
+	 * @return float|null The product fee, if any, or an empty value if no fee
+	 * applies.
+	 * @author Aelia <support@aelia.co>
+	 */
+	protected function get_product_fee($product_id) {
+		// This check was copied from the original code, and it seems to verify that
+		// the product has fees associated to it. It may be superflous, though
+		// TODO Review check and (eventually) remove it
+		if( !get_post_meta( $product_id, 'product-fee-name', true ) ) {
+			return false;
+		}
+
+		$active_currency = get_woocommerce_currency();
+		$product_fee = get_post_meta( $product_id, 'product-fee-amount-' . $active_currency, true );
+
+		// If there isn't a product fee specified for the active currency, check if
+		// there is a fee for product's base currency
+		if( empty( $product_fee ) ) {
+			// Load product's base currency. It will be used to show the Admin which
+			// fees can be calculated automatically
+			$product_base_currency = WooCommerce_Product_Fees_Currency_Helper::get_product_base_currency($product_id);
+
+			// If there is a fee in base currency, retrieve it and convert it to the
+			// active currency
+			$product_fee = get_post_meta( $product_id, 'product-fee-amount-' . $product_base_currency, true );
+			if( !empty( $product_fee ) ) {
+				// If the fee is a percentage, there is no need to convert it. If it's
+				// a fixed value, then we can convert it to the active currency
+				if ( !strpos( $product_fee, '%' ) ) {
+					$product_fee = WooCommerce_Product_Fees_Currency_Helper::convert($product_fee, $active_currency, $product_base_currency);
+				}
+				return $product_fee;
+			}
+		}
+		return $product_fee;
 	}
 
 	/**
@@ -137,17 +184,17 @@ class Woocommerce_Product_Fees {
 			$cart_product = $values['data'];
 
 			// Checks for a fee name and fee amount in the product settings
-			if ( get_post_meta( $cart_product->id, 'product-fee-name', true ) && get_post_meta( $cart_product->id, 'product-fee-amount', true ) ) {
+			$fee_amount = $this->get_product_fee($cart_product->id);
+			if ( !empty( $fee_amount ) ) {
 
 				$fee_name = get_post_meta( $cart_product->id, 'product-fee-name', true );
-				$fee_amount = get_post_meta( $cart_product->id, 'product-fee-amount', true );
 				$fee_multiplier = get_post_meta( $cart_product->id, 'product-fee-multiplier', true );
 
 				// Send fee data to product_specific_fee()
 				$this->product_specific_fee( $cart_product->id, $fee_amount, $fee_name, $fee_multiplier );
 
 			}
-		
+
 		}
 
 	}
