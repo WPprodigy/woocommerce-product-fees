@@ -133,12 +133,17 @@ class Woocommerce_Product_Fees {
 			// Checks for a fee name and fee amount in the product settings
 			if ( get_post_meta( $cart_product->id, 'product-fee-name', true ) && get_post_meta( $cart_product->id, 'product-fee-amount', true ) ) {
 
-				$fee_name = get_post_meta( $cart_product->id, 'product-fee-name', true );
-				$fee_amount = get_post_meta( $cart_product->id, 'product-fee-amount', true );
-				$fee_multiplier = get_post_meta( $cart_product->id, 'product-fee-multiplier', true );
+				$fee = array(
+					'name' => get_post_meta( $cart_product->id, 'product-fee-name', true ), 
+					'amount' =>	get_post_meta( $cart_product->id, 'product-fee-amount', true ),
+					'multiplier' => get_post_meta( $cart_product->id, 'product-fee-multiplier', true ),
+					'product_id' => $cart_product->id
+				);
+
+				$filtered_fee_data = apply_filters( 'woocommerce_product_fees_filter_fee_data',  $fee );
 
 				// Send fee data to product_specific_fee()
-				$this->product_specific_fee( $cart_product->id, $fee_amount, $fee_name, $fee_multiplier );
+				$this->product_specific_fee( $cart_product->id, $filtered_fee_data['amount'], $filtered_fee_data['name'], $filtered_fee_data['multiplier'] );
 
 			}
 		

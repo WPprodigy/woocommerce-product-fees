@@ -47,12 +47,16 @@ class Woocommerce_Product_Fees_Admin {
 
 		// Text Field - Fee Amount
 		woocommerce_wp_text_input( array( 'id' => 'product-fee-amount', 'label' => __( 'Fee Amount', 'woocommerce-product-fees' ) . ' (' . get_woocommerce_currency_symbol() . ')', 'data_type' => 'price', 'desc_tip' => 'true', 'description' => __( 'Enter a monetary decimal without any currency symbols or thousand seperators. This field also accepts percentages.', 'woocommerce-product-fees' ) ) );
+
+		do_action( 'woocommerce_product_fees_add_settings_group_one' );
 		
 		echo '</div>';
 		echo '<div class="options_group">';
 
 		// Check Box - Fee Multiply Option
 		woocommerce_wp_checkbox( array( 'id'=> 'product-fee-multiplier', 'label' => __('Multiply Fee by Quantity', 'woocommerce-product-fees' ), 'desc_tip' => 'true', 'description' => __( 'Multiply the fee by the quanitity of this product that is added to the cart.', 'woocommerce-product-fees' ) ) );
+
+		do_action( 'woocommerce_product_fees_add_settings_group_two' );
 
 		echo '</div>';
 		echo '</div>';
