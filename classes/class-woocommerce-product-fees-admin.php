@@ -33,7 +33,7 @@ class Woocommerce_Product_Fees_Admin {
 
 	public function create_product_panel_tab() {
 
-		echo '<li class="fees_product_tab product_fee_options"><a href="#fees_product_data">'.__( 'Product Fees', 'woocommerce-composite-products' ).'</a></li>';
+		echo '<li class="fees_product_tab product_fee_options"><a href="#fees_product_data">' . __( 'Product Fees', 'woocommerce-product-fees' ).'</a></li>';
 
 	}
 
@@ -46,7 +46,7 @@ class Woocommerce_Product_Fees_Admin {
 		woocommerce_wp_text_input( array( 'id' => 'product-fee-name', 'label' => __( 'Fee Name', 'woocommerce-product-fees' ), 'data_type' => 'text', 'placeholder' => __('Product Fee', 'placeholder', 'woocommerce-product-fees'), 'desc_tip' => 'true', 'description' => __( 'This will be shown at checkout descriping the added fee.', 'woocommerce-product-fees' ) ) );
 
 		// Text Field - Fee Amount
-		woocommerce_wp_text_input( array( 'id' => 'product-fee-amount', 'label' => __( 'Fee Amount', 'woocommerce-product-fees' ) . ' (' . get_woocommerce_currency_symbol() . ')', 'data_type' => 'price', 'desc_tip' => 'true', 'description' => __( 'Enter a monetary decimal without any currency symbols or thousand seperators. This field also accepts percentages.', 'woocommerce-product-fees' ) ) );
+		woocommerce_wp_text_input( array( 'id' => 'product-fee-amount', 'label' => sprintf( __( 'Fee Amount (%s)', 'woocommerce-product-fees' ), get_woocommerce_currency_symbol() ), 'data_type' => 'price', 'desc_tip' => 'true', 'description' => __( 'Enter a monetary decimal without any currency symbols or thousand seperators. This field also accepts percentages.', 'woocommerce-product-fees' ) ) );
 
 		do_action( 'woocommerce_product_fees_add_settings_group_one' );
 		
@@ -79,7 +79,7 @@ class Woocommerce_Product_Fees_Admin {
 
 		// Check Box - Fee Multiply Option
 		$product_fee_multiplier_checkbox = isset( $_POST['product-fee-multiplier'] ) ? 'yes' : 'no';
-	    update_post_meta( $post_id, 'product-fee-multiplier', $product_fee_multiplier_checkbox );
+	    	update_post_meta( $post_id, 'product-fee-multiplier', $product_fee_multiplier_checkbox );
 			
 	}
 
