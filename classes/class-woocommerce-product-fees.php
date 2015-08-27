@@ -46,9 +46,7 @@ class Woocommerce_Product_Fees {
 	 */
 	public function add_product_fee( $fee_amount, $fee_name ) {
 
- 		global $woocommerce;
-
-  		$woocommerce->cart->add_fee( __($fee_name, 'woocommerce-product-fees'), $fee_amount );
+  		WC()->cart->add_fee( __($fee_name, 'woocommerce-product-fees'), $fee_amount );
 	
 	}
 
@@ -103,9 +101,7 @@ class Woocommerce_Product_Fees {
 	 */
 	public function product_specific_fee( $product_id, $product_fee, $product_fee_name, $quantity_multiply ) {
 
-		global $woocommerce;
-
-		foreach( $woocommerce->cart->get_cart() as $cart_item_key => $values ) {
+		foreach( WC()->cart->get_cart() as $cart_item_key => $values ) {
 
 			$cart_product = $values['data'];
 			$cart_product_qty = $values['quantity'];
@@ -130,9 +126,7 @@ class Woocommerce_Product_Fees {
 	 */
 	public function get_product_fee_data() {
 
-		global $woocommerce;
-
-		foreach( $woocommerce->cart->get_cart() as $cart_item_key => $values ) {
+		foreach( WC()->cart->get_cart() as $cart_item_key => $values ) {
 
 			$cart_product = $values['data'];
 
