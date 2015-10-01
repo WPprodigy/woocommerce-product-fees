@@ -44,14 +44,14 @@ class Woocommerce_Product_Fees {
 	/**
 	 * Creates the fee.
 	 */
-	public function add_product_fee( $fee_amount, $fee_name ) {
+	public function add_product_fee( $fee_amount, $fee_name, $parent_variation_fee ) {
 
 		$all_fees = WC()->cart->fees;
 
 		foreach ( $all_fees as $fee ) {
 			// If the fee has the same name as a fee already in the cart,
 			// then add the fee amounts and present as a single fee.
-			if ( $fee->name == $fee_name && apply_filters( 'woocommerce_product_fees_add_amounts', true ) ) {
+			if ( $fee->name == $fee_name && ! $parent_variation_fee && apply_filters( 'woocommerce_product_fees_add_amounts', true ) ) {
 				$fee->amount = $fee->amount + $fee_amount;
 				return;
 			}
@@ -108,9 +108,9 @@ class Woocommerce_Product_Fees {
 	}
 
 	/**
-	 * Checks if products in the cart have added fees. If so, then it send the data to add_product_fee().
+	 * Checks if products in the cart have added fees. If so, then it sends the data to add_product_fee().
 	 */
-	public function product_specific_fee( $product_id, $product_fee, $product_fee_name, $quantity_multiply ) {
+	public function product_specific_fee( $product_id, $product_fee, $product_fee_name, $quantity_multiply, $parent_variation_fee ) {
 
 		foreach( WC()->cart->get_cart() as $cart_item_key => $values ) {
 
@@ -122,9 +122,9 @@ class Woocommerce_Product_Fees {
 			if ( $cart_product->id == $product_id || $values['variation_id'] == $product_id ) {
 
 				$new_product_fee = $this->quantity_multiply( $product_fee, $cart_product_price, $quantity_multiply, $cart_product_qty );
-			
+
 				// Send multiplied fee data to add_product_fee()
-				$this->add_product_fee( $new_product_fee, $product_fee_name );
+				$this->add_product_fee( $new_product_fee, $product_fee_name, $parent_variation_fee );
 
 			}
 		
@@ -137,6 +137,8 @@ class Woocommerce_Product_Fees {
 	 */
 	public function get_product_fee_data() {
 
+		$parent_variation_fee = false;
+
 		foreach( WC()->cart->get_cart() as $cart_item_key => $values ) {
 
 			// Set the product ID
@@ -148,8 +150,10 @@ class Woocommerce_Product_Fees {
 				$cart_variable_product_id = $values['variation_id'];
 
 				// Check if that variation has a fee
-				if ( get_post_meta( $cart_variable_product_id, 'product-fee-nam, true' ) != '' && get_post_meta( $cart_variable_product_id, 'product-fee-amount', true ) != '' ) {
+				if ( get_post_meta( $cart_variable_product_id, 'product-fee-name', true ) != '' && get_post_meta( $cart_variable_product_id, 'product-fee-amount', true ) != '' ) {
 					$cart_product_id  = $values['variation_id'];
+				} else {
+					$parent_variation_fee = true;
 				}
 
 			}
@@ -167,7 +171,7 @@ class Woocommerce_Product_Fees {
 				$filtered_fee_data = apply_filters( 'woocommerce_product_fees_filter_fee_data',  $fee );
 
 				// Send fee data to product_specific_fee()
-				$this->product_specific_fee( $cart_product_id, $filtered_fee_data['amount'], $filtered_fee_data['name'], $filtered_fee_data['multiplier'] );
+				$this->product_specific_fee( $cart_product_id, $filtered_fee_data['amount'], $filtered_fee_data['name'], $filtered_fee_data['multiplier'], $parent_variation_fee );
 
 			}
 		

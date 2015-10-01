@@ -57,7 +57,7 @@ class Woocommerce_Product_Fees_Admin {
 		do_action( 'woocommerce_product_fees_add_settings_group_one' );
 		
 		echo '</div>';
-		echo '<div class="options_group">';
+		echo '<div class="options_group hide_if_variable">';
 
 		// Check Box - Fee Multiply Option
 		woocommerce_wp_checkbox( array( 'id'=> 'product-fee-multiplier', 'label' => __('Multiply Fee by Quantity', 'woocommerce-product-fees' ), 'desc_tip' => 'true', 'description' => __( 'Multiply the fee by the quanitity of this product that is added to the cart.', 'woocommerce-product-fees' ) ) );
@@ -85,7 +85,7 @@ class Woocommerce_Product_Fees_Admin {
 
 		// Check Box - Fee Multiply Option
 		$product_fee_multiplier_checkbox = isset( $_POST['product-fee-multiplier'] ) ? 'yes' : 'no';
-	    	update_post_meta( $post_id, 'product-fee-multiplier', $product_fee_multiplier_checkbox );
+	    update_post_meta( $post_id, 'product-fee-multiplier', $product_fee_multiplier_checkbox );
 			
 	}
 
