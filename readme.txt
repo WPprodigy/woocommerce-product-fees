@@ -1,5 +1,5 @@
 === WooCommerce Product Fees ===
-Contributors: iCaleb
+Contributors: woothemes, iCaleb
 Tags: woocommerce, woocommerce fees, woocommerce surcharge, product fees, product surcharge, additional fees, product based fees
 Requires at least: 4.0
 Tested up to: 4.3

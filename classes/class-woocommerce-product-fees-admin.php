@@ -73,13 +73,13 @@ class Woocommerce_Product_Fees_Admin {
 		
 		// Text Field - Fee Name
 		$product_fee_name_text_field = $_POST['product-fee-name'];
-		if( ! empty( $product_fee_name_text_field ) || ! empty( get_post_meta( $post_id, 'product-fee-name' ) ) ) {
+		if( ! empty( $product_fee_name_text_field ) || get_post_meta( $post_id, 'product-fee-name' ) != '' ) {
 			update_post_meta( $post_id, 'product-fee-name', esc_attr( $product_fee_name_text_field ) );
 		}
 
 		// Text Field - Fee Amount
 		$product_fee_amount_text_field = $_POST['product-fee-amount'];
-		if( ! empty( $product_fee_amount_text_field ) || ! empty( get_post_meta( $post_id, 'product-fee-amount' ) ) ) {
+		if( ! empty( $product_fee_amount_text_field ) || get_post_meta( $post_id, 'product-fee-amount' ) != '' ) {
 			update_post_meta( $post_id, 'product-fee-amount', esc_attr( $product_fee_amount_text_field ) );
 		}
 
@@ -108,13 +108,13 @@ class Woocommerce_Product_Fees_Admin {
 
 		// Text Field - Fee Name
 		$product_fee_name_text_field = $_POST['product-fee-name'][ $post_id ];
-		if( ! empty( $product_fee_name_text_field ) || ! empty( get_post_meta( $post_id, 'product-fee-name' ) ) ) {
+		if( ! empty( $product_fee_name_text_field ) || get_post_meta( $post_id, 'product-fee-name' ) != '' ) {
 			update_post_meta( $post_id, 'product-fee-name', esc_attr( $product_fee_name_text_field ) );
 		}
 
 		// Text Field - Fee Amount
 		$product_fee_amount_text_field = $_POST['product-fee-amount'][ $post_id ];
-		if( ! empty( $product_fee_amount_text_field ) || ! empty( get_post_meta( $post_id, 'product-fee-amount' ) ) ) {
+		if( ! empty( $product_fee_amount_text_field ) || get_post_meta( $post_id, 'product-fee-amount' ) != '' ) {
 			update_post_meta( $post_id, 'product-fee-amount', esc_attr( $product_fee_amount_text_field ) );
 		}
 

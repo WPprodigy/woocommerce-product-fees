@@ -137,14 +137,14 @@ class Woocommerce_Product_Fees {
 				$cart_variable_product_id = $values['variation_id'];
 
 				// Check if that variation has a fee
-				if ( ! empty( get_post_meta( $cart_variable_product_id, 'product-fee-name', true ) && get_post_meta( $cart_variable_product_id, 'product-fee-amount', true ) ) ) {
+				if ( get_post_meta( $cart_variable_product_id, 'product-fee-name' ) != '' && get_post_meta( $cart_variable_product_id, 'product-fee-amount' ) != '' ) {
 					$cart_product_id  = $values['variation_id'];
 				}
 
 			}
 
 			// Check for a fee name and fee amount in the product settings
-			if ( ! empty( get_post_meta( $cart_product_id, 'product-fee-name', true ) && get_post_meta( $cart_product_id, 'product-fee-amount', true ) ) ) {
+			if ( get_post_meta( $cart_variable_product_id, 'product-fee-name' ) != '' && get_post_meta( $cart_variable_product_id, 'product-fee-amount' ) != '' ) {
 
 				$fee = array(
 					'name' => get_post_meta( $cart_product_id, 'product-fee-name', true ), 
