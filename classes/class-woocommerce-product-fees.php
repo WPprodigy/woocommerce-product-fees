@@ -144,7 +144,7 @@ class Woocommerce_Product_Fees {
 			}
 
 			// Check for a fee name and fee amount in the product settings
-			if ( get_post_meta( $cart_variable_product_id, 'product-fee-name' ) != '' && get_post_meta( $cart_variable_product_id, 'product-fee-amount' ) != '' ) {
+			if ( get_post_meta( $cart_product_id, 'product-fee-name' ) != '' && get_post_meta( $cart_product_id, 'product-fee-amount' ) != '' ) {
 
 				$fee = array(
 					'name' => get_post_meta( $cart_product_id, 'product-fee-name', true ), 
