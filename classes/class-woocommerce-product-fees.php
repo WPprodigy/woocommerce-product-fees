@@ -108,7 +108,7 @@ class Woocommerce_Product_Fees {
 			$cart_product_price = $cart_product->price;
 
 			// Checks if each product in the cart has additional fees that need to be added
-			if ( $cart_product->id == $product_id ) {
+			if ( $cart_product->id == $product_id || $values['variation_id'] == $product_id ) {
 
 				$new_product_fee = $this->quantity_multiply( $product_fee, $cart_product_price, $quantity_multiply, $cart_product_qty );
 			
@@ -128,22 +128,35 @@ class Woocommerce_Product_Fees {
 
 		foreach( WC()->cart->get_cart() as $cart_item_key => $values ) {
 
-			$cart_product = $values['data'];
+			// Set the product ID
+			$cart_product_id = $values['product_id'];
 
-			// Checks for a fee name and fee amount in the product settings
-			if ( get_post_meta( $cart_product->id, 'product-fee-name', true ) && get_post_meta( $cart_product->id, 'product-fee-amount', true ) ) {
+			// Check if there is a variable product in the cart.
+			if ( $values['variation_id'] != 0 ) {
+
+				$cart_variable_product_id = $values['variation_id'];
+
+				// Check if that variation has a fee
+				if ( ! empty( get_post_meta( $cart_variable_product_id, 'product-fee-name', true ) && get_post_meta( $cart_variable_product_id, 'product-fee-amount', true ) ) ) {
+					$cart_product_id  = $values['variation_id'];
+				}
+
+			}
+
+			// Check for a fee name and fee amount in the product settings
+			if ( ! empty( get_post_meta( $cart_product_id, 'product-fee-name', true ) && get_post_meta( $cart_product_id, 'product-fee-amount', true ) ) ) {
 
 				$fee = array(
-					'name' => get_post_meta( $cart_product->id, 'product-fee-name', true ), 
-					'amount' =>	get_post_meta( $cart_product->id, 'product-fee-amount', true ),
-					'multiplier' => get_post_meta( $cart_product->id, 'product-fee-multiplier', true ),
-					'product_id' => $cart_product->id
+					'name' => get_post_meta( $cart_product_id, 'product-fee-name', true ), 
+					'amount' =>	get_post_meta( $cart_product_id, 'product-fee-amount', true ),
+					'multiplier' => get_post_meta( $cart_product_id, 'product-fee-multiplier', true ),
+					'product_id' => $cart_product_id
 				);
 
 				$filtered_fee_data = apply_filters( 'woocommerce_product_fees_filter_fee_data',  $fee );
 
 				// Send fee data to product_specific_fee()
-				$this->product_specific_fee( $cart_product->id, $filtered_fee_data['amount'], $filtered_fee_data['name'], $filtered_fee_data['multiplier'] );
+				$this->product_specific_fee( $cart_product_id, $filtered_fee_data['amount'], $filtered_fee_data['name'], $filtered_fee_data['multiplier'] );
 
 			}
 		

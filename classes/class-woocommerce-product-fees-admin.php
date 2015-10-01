@@ -26,6 +26,12 @@ class Woocommerce_Product_Fees_Admin {
 		// Save Product Settings
 		add_action( 'woocommerce_process_product_meta', array( $this, 'save_product_settings_fields' ) );
 
+		// Add Variation Settings
+		add_action( 'woocommerce_product_after_variable_attributes', array( $this, 'variation_settings_fields' ), 10, 3 );
+
+		// Save Variation Settings
+		add_action( 'woocommerce_save_product_variation', array( $this, 'save_variation_settings_fields' ), 10, 2 );
+
 		// CSS
 		add_action( 'admin_head', array( $this, 'admin_css' ) );
 
@@ -83,11 +89,49 @@ class Woocommerce_Product_Fees_Admin {
 			
 	}
 
+	public function variation_settings_fields( $loop, $variation_data, $variation ) {
+
+		// Text Field - Fee Name
+		woocommerce_wp_text_input( array( 'id' => 'product-fee-name[' . $variation->ID . ']', 'label' => __( 'Fee Name', 'woocommerce-product-fees' ), 'data_type' => 'text', 'placeholder' => __('Product Fee', 'placeholder', 'woocommerce-product-fees'), 'value' => get_post_meta( $variation->ID, 'product-fee-name', true ), 'wrapper_class' => "form-row form-row-first" ) );
+
+		// Text Field - Fee Amount
+		woocommerce_wp_text_input( array( 'id' => 'product-fee-amount[' . $variation->ID . ']', 'label' => __( 'Fee Amount', 'woocommerce-product-fees' ) . ' (' . get_woocommerce_currency_symbol() . ')', 'data_type' => 'price', 'value' => get_post_meta( $variation->ID, 'product-fee-amount', true ), 'wrapper_class' => "form-row form-row-last" ) );
+
+		// Check Box - Fee Multiply Option
+		woocommerce_wp_checkbox( array( 'id'=> 'product-fee-multiplier[' . $variation->ID . ']', 'label' => __('Multiply Fee by Quantity', 'woocommerce-product-fees' ), 'value' => get_post_meta( $variation->ID, 'product-fee-multiplier', true ), 'wrapper_class' => "product-fee-multiplier" ) );
+
+		do_action( 'woocommerce_product_fees_add_variation_settings' );
+
+	}
+
+	public function save_variation_settings_fields( $post_id ) {
+
+		// Text Field - Fee Name
+		$product_fee_name_text_field = $_POST['product-fee-name'][ $post_id ];
+		if( ! empty( $product_fee_name_text_field ) ) {
+			update_post_meta( $post_id, 'product-fee-name', esc_attr( $product_fee_name_text_field ) );
+		}
+
+		// Text Field - Fee Amount
+		$product_fee_amount_text_field = $_POST['product-fee-amount'][ $post_id ];
+		if( ! empty( $product_fee_amount_text_field ) ) {
+			update_post_meta( $post_id, 'product-fee-amount', esc_attr( $product_fee_amount_text_field ) );
+		}
+
+		// Check Box - Fee Multiply Option
+		$product_fee_multiplier_checkbox = isset( $_POST['product-fee-multiplier'][ $post_id ] ) ? 'yes' : 'no';
+	    update_post_meta( $post_id, 'product-fee-multiplier', $product_fee_multiplier_checkbox );
+
+	}
+
 	public function admin_css() {
 		echo "
 		<style type='text/css'>
 			#woocommerce-product-data ul.product_data_tabs li.product_fee_options a:before {
 				content: '\\e01e';
+			}
+			.product-fee-multiplier .checkbox {
+				margin: 0 6px;
 			}
 		</style>
 		";
