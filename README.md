@@ -15,15 +15,19 @@ WooCommerce Product Fees allows you to add additional fees at checkout based on 
 Product Settings: 
 ![Image of Settings](images/settings.png)
 
+Variation Settings: 
+![Image of Variation Settings](images/variation-settings.png)
+
 Fees at Checkout:
 ![Image of Checkout with Fees](images/checkout.png)
 
 ## Features
 
-I have kept this plugin simple on purpose. It is very lightweight and should not conflict with any other plugins or themes. I plan to continually add new features such as category fees and variation specific fees. But for now the two main features include:
+I have kept this plugin simple on purpose. It is very lightweight and should not conflict with any other plugins or themes. I plan to continually add new features such as category fees and shipping specific fees. But for now the three main features include:
 
 * Percentage based fees that go off of the product's price.
 * The ability to toggle on and off the quantity multiplier per product.
+* Variation specific fees.
 
 ## Support
 This repository is not suitable for support. Please don't use the issue tracker for support requests, but for plugin issues only. Support can take place in the WordPress.org forums.

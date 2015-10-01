@@ -21,10 +21,11 @@ In the WooCommerce products edit screen, there will be a new product data tab ca
 
 = Features =
 
-I have kept this plugin simple on purpose. It is very lightweight and should not conflict with any other plugins or themes. I plan to continually add new features such as category fees and variation specific fees. But for now the two main features include:
+I have kept this plugin simple on purpose. It is very lightweight and should not conflict with any other plugins or themes. I plan to continually add new features such as category fees and shipping specific fees. But for now the three main features include:
 
 * Percentage based fees that go off of the product's price.
 * The ability to toggle on and off the quantity multiplier per product.
+* Variation specific fees.
 
 = Contributions =
 
@@ -68,9 +69,14 @@ Bugs can be reported either in our support forum or preferably on the [WooCommer
 == Screenshots ==
 
 1. The product settings tab.
-2. Fees shown at checkout.
+2. The variation settings.
+3. Fees shown at checkout.
 
 == Changelog ==
+
+= 1.1 - 09/30/2015 =
+* Feature - Variation specific fees.
+* Fix - Save blank fee names and values.
 
 = 1.0 - 08/25/2015 =
 * Feature - Percentage based fees.
