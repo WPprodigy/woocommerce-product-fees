@@ -46,6 +46,17 @@ class Woocommerce_Product_Fees {
 	 */
 	public function add_product_fee( $fee_amount, $fee_name ) {
 
+		$all_fees = WC()->cart->fees;
+
+		foreach ( $all_fees as $fee ) {
+			// If the fee has the same name as a fee already in the cart,
+			// then add the fee amounts and present as a single fee.
+			if ( $fee->name == $fee_name && apply_filters( 'woocommerce_product_fees_add_amounts', true ) ) {
+				$fee->amount = $fee->amount + $fee_amount;
+				return;
+			}
+		}
+
   		WC()->cart->add_fee( __($fee_name, 'woocommerce-product-fees'), $fee_amount );
 	
 	}

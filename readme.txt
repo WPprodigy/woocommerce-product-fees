@@ -3,7 +3,7 @@ Contributors: woothemes, iCaleb
 Tags: woocommerce, woocommerce fees, woocommerce surcharge, product fees, product surcharge, additional fees, product based fees
 Requires at least: 4.0
 Tested up to: 4.3
-Stable tag: 2.4.5
+Stable tag: 1.1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -73,6 +73,10 @@ Bugs can be reported either in our support forum or preferably on the [WooCommer
 3. Fees shown at checkout.
 
 == Changelog ==
+
+= 1.1.1 - 10/1/2015 =
+* Feature - Add fees with the same name.
+* Fix - Display non-variation fees.
 
 = 1.1 - 09/30/2015 =
 * Feature - Variation specific fees.

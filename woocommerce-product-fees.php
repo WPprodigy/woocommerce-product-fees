@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce Product Fees
  * Plugin URI: http://calebburks.com/woocommerce-product-fees
  * Description: Add additional fees at checkout based on products that are in the cart.
- * Version: 1.1
+ * Version: 1.1.1
  * Author: Caleb Burks
  * Author URI: http://calebburks.com
  *
