@@ -110,24 +110,20 @@ class Woocommerce_Product_Fees {
 	/**
 	 * Checks if products in the cart have added fees. If so, then it sends the data to add_product_fee().
 	 */
-	public function product_specific_fee( $product_id, $product_fee, $product_fee_name, $quantity_multiply, $parent_variation_fee ) {
+	public function product_specific_fee( $values, $product_id, $product_fee, $product_fee_name, $quantity_multiply, $parent_variation_fee ) {
 
-		foreach( WC()->cart->get_cart() as $cart_item_key => $values ) {
+		$cart_product = $values['data'];
+		$cart_product_qty = $values['quantity'];
+		$cart_product_price = $cart_product->price;
 
-			$cart_product = $values['data'];
-			$cart_product_qty = $values['quantity'];
-			$cart_product_price = $cart_product->price;
+		// Checks if each product in the cart has additional fees that need to be added
+		if ( $cart_product->id == $product_id || $values['variation_id'] == $product_id ) {
 
-			// Checks if each product in the cart has additional fees that need to be added
-			if ( $cart_product->id == $product_id || $values['variation_id'] == $product_id ) {
+			$new_product_fee = $this->quantity_multiply( $product_fee, $cart_product_price, $quantity_multiply, $cart_product_qty );
 
-				$new_product_fee = $this->quantity_multiply( $product_fee, $cart_product_price, $quantity_multiply, $cart_product_qty );
+			// Send multiplied fee data to add_product_fee()
+			$this->add_product_fee( $new_product_fee, $product_fee_name, $parent_variation_fee );
 
-				// Send multiplied fee data to add_product_fee()
-				$this->add_product_fee( $new_product_fee, $product_fee_name, $parent_variation_fee );
-
-			}
-		
 		}
 		
 	}
@@ -171,7 +167,7 @@ class Woocommerce_Product_Fees {
 				$filtered_fee_data = apply_filters( 'woocommerce_product_fees_filter_fee_data',  $fee );
 
 				// Send fee data to product_specific_fee()
-				$this->product_specific_fee( $cart_product_id, $filtered_fee_data['amount'], $filtered_fee_data['name'], $filtered_fee_data['multiplier'], $parent_variation_fee );
+				$this->product_specific_fee( $values, $cart_product_id, $filtered_fee_data['amount'], $filtered_fee_data['name'], $filtered_fee_data['multiplier'], $parent_variation_fee );
 
 			}
 		
