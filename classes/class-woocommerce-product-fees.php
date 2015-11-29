@@ -73,7 +73,7 @@ class WooCommerce_Product_Fees {
 				$data = $fee->return_fee();
 				do_action( 'wcpf_before_fee_is_added', $data );
 				// Check if taxes need to be added.
-				if ( ! empty( get_option( 'wcpf_fee_tax_class' ) ) ) {
+				if ( get_option( 'wcpf_fee_tax_class', '' ) !== '' ) {
 					WC()->cart->add_fee( $data['name'], $data['amount'], true, get_option( 'wcpf_fee_tax_class' ) );
 				} else {
 					WC()->cart->add_fee( $data['name'], $data['amount'], false );
