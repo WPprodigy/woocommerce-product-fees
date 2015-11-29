@@ -95,10 +95,12 @@ class WCPF_Product_Fee extends WCPF_Fee {
 		// Run the percentage check.
 		$fee_amount = $this->percentage_conversion( $fee_data['amount'] );
 
-		// Multiple the fee by the quantity if necessary.
+		// Multiply the fee by the quantity if necessary.
 		if ( $fee_data['multiplier'] == 'yes' ) {
 			$fee_data['amount'] = $this->qty * $fee_amount;
-		} 
+		} else {
+			$fee_data['amount'] = $fee_amount;
+		}
 
 		return $fee_data;
 	}
