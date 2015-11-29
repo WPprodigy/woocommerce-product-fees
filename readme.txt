@@ -40,6 +40,8 @@ I have kept this plugin simple on purpose. It is very lightweight and should not
 
 If you’re interested in contributing to WooCommerce Product Fees - head over to the [WooCommerce Product Fees GitHub Repository](https://github.com/WPprodigy/WooCommerce-Product-Fees) to find out how you can pitch in.
 
+Thanks to [Ben Smith](https://profiles.wordpress.org/benjamin-smith) for contributing the plugin's banner and icon image designs.
+
 == Installation ==
 
 = Minimum Requirements =
