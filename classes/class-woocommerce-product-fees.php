@@ -2,12 +2,10 @@
 /**
  * WooCommerce Product Fees
  *
- * Creates and adds the fees at checkout.
+ * Add the fees at checkout.
  *
- * @class 	Woocommerce_Product_Fees
- * @version 1.0
+ * @class 	WooCommerce_Product_Fees
  * @author 	Caleb Burks
- *
  */
 
 // Exit if accessed directly
@@ -15,170 +13,74 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class Woocommerce_Product_Fees {
+class WooCommerce_Product_Fees {
 
+	/**
+	 * Constructor for the main product fees class.
+	 *
+	 * @access public
+	 */
 	public function __construct() {
-
 		if ( is_admin() ) {
-			// Load Admin Settings
-			require_once 'class-woocommerce-product-fees-admin.php';
+			// Product Settings
+			require_once 'admin/class-wcpf-admin-product-settings.php';
+			new WCPF_Admin_Product_Settings();
+			// Global Settings
+			require_once 'admin/class-wcpf-admin-global-settings.php';
+			new WCPF_Admin_Global_Settings();
 		}
+
+		// Fee Classes
+		require_once( 'fees/class-wcpf-fee.php' );
+		require_once( 'fees/class-wcpf-product-fee.php' );
+		require_once( 'fees/class-wcpf-variation-fee.php' );
 
 		// Text Domain
 		add_action( 'plugins_loaded', array( $this, 'text_domain' ) );
 
-		// Add the fee
-		add_action( 'woocommerce_cart_calculate_fees', array( $this, 'get_product_fee_data' ) );
-
-	} 
+		// Hook in for fees to be added
+		add_action( 'woocommerce_cart_calculate_fees', array( $this, 'add_fees' ), 15 );
+	}
 
 	/**
 	 * Load Text Domain
 	 */
 	public function text_domain() {
-
-	 	load_plugin_textdomain( 'woocommerce-product-fees', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' ); 
-
+	 	load_plugin_textdomain( 'woocommerce-product-fees', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' ); 
 	}
 
 	/**
-	 * Creates the fee.
+	 * Add all fees at checkout.
+	 *
+	 * @access public
 	 */
-	public function add_product_fee( $fee_amount, $fee_name, $parent_variation_fee ) {
+	public function add_fees() {
+		foreach( WC()->cart->get_cart() as $cart_item => $values ) {
+			// Assume there is no fee.
+			$fee = false;
 
-		$all_fees = WC()->cart->fees;
-
-		foreach ( $all_fees as $fee ) {
-			// If the fee has the same name as a fee already in the cart,
-			// then add the fee amounts and present as a single fee.
-			if ( $fee->name == $fee_name && ! $parent_variation_fee && apply_filters( 'woocommerce_product_fees_add_amounts', true ) ) {
-				$fee->amount = $fee->amount + $fee_amount;
-				return;
+			if ( 0 !== $values['variation_id'] ) {
+				// Get variation fee. Will return false if there is no fee.
+				$fee = new WCPF_Variation_Fee( $values['product_id'], $values['quantity'], $values['data']->price, $values['variation_id'] );
 			}
-		}
 
-  		WC()->cart->add_fee( __($fee_name, 'woocommerce-product-fees'), $fee_amount );
-	
-	}
-
-	/**
-	 * Checks if the fee has a percentage in it, and then converts the fee from a percentage to a decimal
-	 */
-	public function percentage_conversion( $product_fee, $cart_product_price ) {
-
-		if ( strpos( $product_fee, '%' ) ) {
-
-			// Convert to Decimal
-			$decimal = str_replace( '%', '', $product_fee ) / 100;
-
-			// Multiply by Product Price
-			$fee = $cart_product_price * $decimal;
-
-		} else {
-
-			$fee = $product_fee;
-
-		}
-
-		return $fee;
-
-	}
-
-	/**
-	 * Checks if the fee should be multiplied by the quantity of the product in the cart
-	 */
-	public function quantity_multiply( $product_fee, $cart_product_price, $quantity_multiply, $cart_product_qty ) {
-
-		// Pull in the percentage check
-		$product_fee = $this->percentage_conversion( $product_fee, $cart_product_price );
-
-		if ( $quantity_multiply == 'yes' ) {
-
-			// Multiply the fee by the quantity
-			$new_product_fee = $cart_product_qty * $product_fee;
-
-		} else {
-
-			$new_product_fee = $product_fee;
-
-		}
-
-		return $new_product_fee;
-
-	}
-
-	/**
-	 * Checks if products in the cart have added fees. If so, then it sends the data to add_product_fee().
-	 */
-	public function product_specific_fee( $product_id, $product_fee, $product_fee_name, $quantity_multiply, $parent_variation_fee ) {
-
-		foreach( WC()->cart->get_cart() as $cart_item_key => $values ) {
-
-			$cart_product = $values['data'];
-			$cart_product_qty = $values['quantity'];
-			$cart_product_price = $cart_product->price;
-
-			// Checks if each product in the cart has additional fees that need to be added
-			if ( $cart_product->id == $product_id || $values['variation_id'] == $product_id ) {
-
-				$new_product_fee = $this->quantity_multiply( $product_fee, $cart_product_price, $quantity_multiply, $cart_product_qty );
-
-				// Send multiplied fee data to add_product_fee()
-				$this->add_product_fee( $new_product_fee, $product_fee_name, $parent_variation_fee );
-
+			if ( ! $fee ) {
+				// Get product fee. Will return false if there is no fee.
+				$fee = new WCPF_Product_Fee( $values['product_id'], $values['quantity'], $values['data']->price );
 			}
-		
-		}
-		
-	}
 
-	/**
-	 * Pulls data from WooCommerce product settings and sends it to product_specific_fee().
-	 */
-	public function get_product_fee_data() {
-
-		$parent_variation_fee = false;
-
-		foreach( WC()->cart->get_cart() as $cart_item_key => $values ) {
-
-			// Set the product ID
-			$cart_product_id = $values['product_id'];
-
-			// Check if there is a variable product in the cart.
-			if ( $values['variation_id'] != 0 ) {
-
-				$cart_variable_product_id = $values['variation_id'];
-
-				// Check if that variation has a fee
-				if ( get_post_meta( $cart_variable_product_id, 'product-fee-name', true ) != '' && get_post_meta( $cart_variable_product_id, 'product-fee-amount', true ) != '' ) {
-					$cart_product_id  = $values['variation_id'];
+			if ( $fee->return_fee() ) {
+				$data = $fee->return_fee();
+				do_action( 'wcpf_before_fee_is_added', $data );
+				// Check if taxes need to be added.
+				if ( ! empty( get_option( 'wcpf_fee_tax_class' ) ) ) {
+					WC()->cart->add_fee( $data['name'], $data['amount'], true, get_option( 'wcpf_fee_tax_class' ) );
 				} else {
-					$parent_variation_fee = true;
+					WC()->cart->add_fee( $data['name'], $data['amount'], false );
 				}
-
+				do_action( 'wcpf_after_fee_is_added', $data );
 			}
-
-			// Check for a fee name and fee amount in the product settings
-			if ( get_post_meta( $cart_product_id, 'product-fee-name', true ) != '' && get_post_meta( $cart_product_id, 'product-fee-amount', true ) != '' ) {
-
-				$fee = array(
-					'name' => get_post_meta( $cart_product_id, 'product-fee-name', true ), 
-					'amount' =>	get_post_meta( $cart_product_id, 'product-fee-amount', true ),
-					'multiplier' => get_post_meta( $cart_product_id, 'product-fee-multiplier', true ),
-					'product_id' => $cart_product_id
-				);
-
-				$filtered_fee_data = apply_filters( 'woocommerce_product_fees_filter_fee_data',  $fee );
-
-				// Send fee data to product_specific_fee()
-				$this->product_specific_fee( $cart_product_id, $filtered_fee_data['amount'], $filtered_fee_data['name'], $filtered_fee_data['multiplier'], $parent_variation_fee );
-
-			}
-		
 		}
-
 	}
 
-
-} // End Class
-new Woocommerce_Product_Fees();
+}

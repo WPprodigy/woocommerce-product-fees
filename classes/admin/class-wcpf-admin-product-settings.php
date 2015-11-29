@@ -1,13 +1,11 @@
 <?php
 /**
- * WooCommerce Product Fees - Admin Settings
+ * WooCommerce Product Fees
  *
- * Creates and saves the product settings.
+ * Creates and saves the product and variation settings.
  *
- * @class 	Woocommerce_Product_Fees_Admin
- * @version 1.0
+ * @class 	WCPF_Admin_Product_Settings
  * @author 	Caleb Burks
- *
  */
 
 // Exit if accessed directly
@@ -15,62 +13,51 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class Woocommerce_Product_Fees_Admin {
+class WCPF_Admin_Product_Settings {
 
 	public function __construct() {
-
-		// Add Product Settings
+		// Add and save product settings.
 		add_action( 'woocommerce_product_write_panel_tabs', array( $this, 'create_product_panel_tab' ) );
 		add_action( 'woocommerce_product_write_panels', array( $this, 'product_settings_fields' ) );
-
-		// Save Product Settings
 		add_action( 'woocommerce_process_product_meta', array( $this, 'save_product_settings_fields' ) );
 
-		// Add Variation Settings
+		// Add and save variation settings.
 		add_action( 'woocommerce_product_after_variable_attributes', array( $this, 'variation_settings_fields' ), 10, 3 );
-
-		// Save Variation Settings
 		add_action( 'woocommerce_save_product_variation', array( $this, 'save_variation_settings_fields' ), 10, 2 );
 
 		// CSS
 		add_action( 'admin_head', array( $this, 'admin_css' ) );
-
 	}
 
 	public function create_product_panel_tab() {
-
 		echo '<li class="fees_product_tab product_fee_options"><a href="#fees_product_data">' . __( 'Product Fees', 'woocommerce-product-fees' ).'</a></li>';
-
 	}
 
 	public function product_settings_fields() {
-
 		echo '<div id="fees_product_data" class="fee_panel panel woocommerce_options_panel wc-metaboxes-wrapper">';
 		echo '<div class="options_group">';
 
 		// Text Field - Fee Name
-		woocommerce_wp_text_input( array( 'id' => 'product-fee-name', 'label' => __( 'Fee Name', 'woocommerce-product-fees' ), 'data_type' => 'text', 'placeholder' => __('Product Fee', 'placeholder', 'woocommerce-product-fees'), 'desc_tip' => 'true', 'description' => __( 'This will be shown at checkout descriping the added fee.', 'woocommerce-product-fees' ) ) );
+		woocommerce_wp_text_input( array( 'id' => 'product-fee-name', 'label' => __( 'Fee Name', 'woocommerce-product-fees' ), 'data_type' => 'text', 'placeholder' => __('Product Fee', 'woocommerce-product-fees'), 'desc_tip' => 'true', 'description' => __( 'This will be shown at checkout descriping the added fee.', 'woocommerce-product-fees' ) ) );
 
 		// Text Field - Fee Amount
-		woocommerce_wp_text_input( array( 'id' => 'product-fee-amount', 'label' => sprintf( __( 'Fee Amount (%s)', 'woocommerce-product-fees' ), get_woocommerce_currency_symbol() ), 'data_type' => 'price', 'desc_tip' => 'true', 'description' => __( 'Enter a monetary decimal without any currency symbols or thousand seperators. This field also accepts percentages.', 'woocommerce-product-fees' ) ) );
+		woocommerce_wp_text_input( array( 'id' => 'product-fee-amount', 'label' => sprintf( __( 'Fee Amount (%s)', 'woocommerce-product-fees' ), get_woocommerce_currency_symbol() ), 'data_type' => 'price', 'placeholder' => __('Monetary Decimal or Percentage', 'woocommerce-product-fees'), 'desc_tip' => 'true', 'description' => __( 'Enter a monetary decimal without any currency symbols or thousand seperators. This field also accepts percentages.', 'woocommerce-product-fees' ) ) );
 
-		do_action( 'woocommerce_product_fees_add_settings_group_one' );
+		do_action( 'wcpf_add_product_settings_group_one' );
 		
 		echo '</div>';
-		echo '<div class="options_group hide_if_variable">';
+		echo '<div class="options_group">';
 
 		// Check Box - Fee Multiply Option
 		woocommerce_wp_checkbox( array( 'id'=> 'product-fee-multiplier', 'label' => __('Multiply Fee by Quantity', 'woocommerce-product-fees' ), 'desc_tip' => 'true', 'description' => __( 'Multiply the fee by the quanitity of this product that is added to the cart.', 'woocommerce-product-fees' ) ) );
 
-		do_action( 'woocommerce_product_fees_add_settings_group_two' );
+		do_action( 'wcpf_add_products_settings_group_two' );
 
 		echo '</div>';
 		echo '</div>';
-
 	}
 
 	public function save_product_settings_fields( $post_id ){
-		
 		// Text Field - Fee Name
 		$product_fee_name_text_field = $_POST['product-fee-name'];
 		if( ! empty( $product_fee_name_text_field ) || get_post_meta( $post_id, 'product-fee-name', true ) != '' ) {
@@ -85,27 +72,37 @@ class Woocommerce_Product_Fees_Admin {
 
 		// Check Box - Fee Multiply Option
 		$product_fee_multiplier_checkbox = isset( $_POST['product-fee-multiplier'] ) ? 'yes' : 'no';
-	    update_post_meta( $post_id, 'product-fee-multiplier', $product_fee_multiplier_checkbox );
-			
+		update_post_meta( $post_id, 'product-fee-multiplier', $product_fee_multiplier_checkbox );
 	}
 
 	public function variation_settings_fields( $loop, $variation_data, $variation ) {
+		// Set placeholders based on global product level fees.
+		$parent_id = $variation->post_parent;
+		if ( get_post_meta( $parent_id, 'product-fee-name', true ) != '' && get_post_meta( $parent_id, 'product-fee-amount', true ) != '' ) {
+			$placeholders = array(
+				'name' => get_post_meta( $parent_id, 'product-fee-name', true ),
+				'amount' =>	get_post_meta( $parent_id, 'product-fee-amount', true )
+			);
+		} else {
+			$placeholders = array(
+				'name' => __('Product Fee', 'woocommerce-product-fees'),
+				'amount' =>	__('Monetary Decimal or Percentage', 'woocommerce-product-fees'),
+			);
+		}
 
 		// Text Field - Fee Name
-		woocommerce_wp_text_input( array( 'id' => 'product-fee-name[' . $variation->ID . ']', 'label' => __( 'Fee Name', 'woocommerce-product-fees' ), 'data_type' => 'text', 'placeholder' => __('Product Fee', 'placeholder', 'woocommerce-product-fees'), 'value' => get_post_meta( $variation->ID, 'product-fee-name', true ), 'wrapper_class' => "form-row form-row-first" ) );
+		woocommerce_wp_text_input( array( 'id' => 'product-fee-name[' . $variation->ID . ']', 'label' => __( 'Fee Name', 'woocommerce-product-fees' ), 'data_type' => 'text', 'placeholder' => $placeholders['name'], 'value' => get_post_meta( $variation->ID, 'product-fee-name', true ), 'wrapper_class' => "form-row form-row-first" ) );
 
 		// Text Field - Fee Amount
-		woocommerce_wp_text_input( array( 'id' => 'product-fee-amount[' . $variation->ID . ']', 'label' => __( 'Fee Amount', 'woocommerce-product-fees' ) . ' (' . get_woocommerce_currency_symbol() . ')', 'data_type' => 'price', 'value' => get_post_meta( $variation->ID, 'product-fee-amount', true ), 'wrapper_class' => "form-row form-row-last" ) );
+		woocommerce_wp_text_input( array( 'id' => 'product-fee-amount[' . $variation->ID . ']', 'label' => __( 'Fee Amount', 'woocommerce-product-fees' ) . ' (' . get_woocommerce_currency_symbol() . ')', 'data_type' => 'price', 'placeholder' => $placeholders['amount'], 'value' => get_post_meta( $variation->ID, 'product-fee-amount', true ), 'wrapper_class' => "form-row form-row-last" ) );
 
 		// Check Box - Fee Multiply Option
 		woocommerce_wp_checkbox( array( 'id'=> 'product-fee-multiplier[' . $variation->ID . ']', 'label' => __('Multiply Fee by Quantity', 'woocommerce-product-fees' ), 'value' => get_post_meta( $variation->ID, 'product-fee-multiplier', true ), 'wrapper_class' => "product-fee-multiplier" ) );
 
-		do_action( 'woocommerce_product_fees_add_variation_settings' );
-
+		do_action( 'wcpf_add_variation_settings' );
 	}
 
 	public function save_variation_settings_fields( $post_id ) {
-
 		// Text Field - Fee Name
 		$product_fee_name_text_field = $_POST['product-fee-name'][ $post_id ];
 		if( ! empty( $product_fee_name_text_field ) || get_post_meta( $post_id, 'product-fee-name', true ) != '' ) {
@@ -120,8 +117,7 @@ class Woocommerce_Product_Fees_Admin {
 
 		// Check Box - Fee Multiply Option
 		$product_fee_multiplier_checkbox = isset( $_POST['product-fee-multiplier'][ $post_id ] ) ? 'yes' : 'no';
-	    update_post_meta( $post_id, 'product-fee-multiplier', $product_fee_multiplier_checkbox );
-
+		update_post_meta( $post_id, 'product-fee-multiplier', $product_fee_multiplier_checkbox );
 	}
 
 	public function admin_css() {
@@ -137,6 +133,4 @@ class Woocommerce_Product_Fees_Admin {
 		";
 	}
 
-
 } // End Class
-new Woocommerce_Product_Fees_Admin();

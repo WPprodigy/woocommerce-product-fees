@@ -2,8 +2,8 @@
 Contributors: woothemes, iCaleb
 Tags: woocommerce, woocommerce fees, woocommerce surcharge, product fees, product surcharge, additional fees, product based fees
 Requires at least: 4.0
-Tested up to: 4.3
-Stable tag: 1.1.1
+Tested up to: 4.4
+Stable tag: 1.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -19,13 +19,22 @@ In the WooCommerce products edit screen, there will be a new product data tab ca
 * Enter the cost of the fee as either a flat rate number or as a percentage.
 * Choose whether or not the fee should be multiplied based on the quantity of the product in the cart.
 
+There will also be similar fields within each variation tab on the product. If the variation does not have a fee, it will fallback and look to use the product fee if one exists.
+
+For the plugin settings, you can go **WooCommerce > Settings > Products > Product Fees**. Here you will find two settings:
+
+* Fee Tax Class - Assign a tax class to be applied to fees, or leave it so fees are not taxed.
+* Fee Name Conflicts - Choose whether fees with the same name should be combined or not.
+
 = Features =
 
-I have kept this plugin simple on purpose. It is very lightweight and should not conflict with any other plugins or themes. I plan to continually add new features such as category fees and shipping specific fees. But for now the three main features include:
+I have kept this plugin simple on purpose. It is very lightweight and should not conflict with any other plugins or themes. Here are the features included in the plugin:
 
 * Percentage based fees that go off of the product's price.
-* The ability to toggle on and off the quantity multiplier per product.
+* A quantity multiplier that can be toggled on/off per product and per variation.
 * Variation specific fees.
+* Option to combine fees with the same name.
+* Abillity to assign a tax class to be used on fees.
 
 = Contributions =
 
@@ -35,14 +44,14 @@ If you’re interested in contributing to WooCommerce Product Fees - head over t
 
 = Minimum Requirements =
 
-* WordPress 3.8 or greater
-* WooCommerce 2.3 or greater
+* WordPress 4.0 or greater
+* WooCommerce 2.2 or greater
 
 = Automatic installation =
 
-Automatic installation is the easiest option as WordPress handles the file transfers itself and you don’t need to leave your web browser. To do an automatic install of WooCommerce Product Fees, log in to your WordPress dashboard, navigate to the Plugins menu and click Add New.
+Automatic installation is the easiest option as WordPress handles the file transfers itself and you don’t need to leave your web browser. To do an automatic install of WooCommerce Product Fees, log in to your WordPress dashboard, navigate to the Plugins menu, and click Add New.
 
-In the search field type “WooCommerce Product Fees” and click Search Plugins. Once you’ve found the plugin you can view details about it such as the the point release, rating and description. Most importantly of course, you can install it by simply clicking “Install Now”.
+In the search field type “WooCommerce Product Fees” and click Search Plugins. Once you’ve found the plugin you can view details about it such as the point release, rating, and description. Most importantly of course, you can install it by simply clicking “Install Now”.
 
 = Manual installation =
 
@@ -60,19 +69,28 @@ You can post here in the support section at WordPress.org. Just click on the Sup
 
 = Where can I request new features? =
 
-Feel free to submit a feature request as an issue at the [WooCommerce Product Fees GitHub Repository](https://github.com/WPprodigy/WooCommerce-Product-Fees). Be sure to check if this has already been suggested though.
+Feel free to submit a feature request as an issue at the [WooCommerce Product Fees GitHub Repository](https://github.com/WPprodigy/WooCommerce-Product-Fees). Be sure to check if this has already been suggested though. You can also suggest a feature in the support forums here at WordPress.org using the Support tab on the right.
 
 = Where can I report bugs or contribute to the project? =
 
-Bugs can be reported either in our support forum or preferably on the [WooCommerce Product Fees GitHub Repository](https://github.com/WPprodigy/WooCommerce-Product-Fees).
+Bugs can be reported either in the support forum or preferably on the [WooCommerce Product Fees GitHub Repository](https://github.com/WPprodigy/WooCommerce-Product-Fees).
 
 == Screenshots ==
 
 1. The product settings tab.
 2. The variation settings.
-3. Fees shown at checkout.
+3. The product fees settings area.
+4. Fees shown at checkout.
 
 == Changelog ==
+
+= 1.2 - 11/29/2015 =
+* Feature - Abillity to assign a tax class to be used on fees.
+* Feature - Adds a setting to choose whether to combine fees with the same name or not.
+* Feature - Variation products can now use the fee multiplier on the global product level.
+* Fix - Various calculation issues in regards to multiple variation children being in the cart.
+* Fix - Add language .pot file.
+* Refactor - Completely re-wrote the plugin to make it more efficient and extendable.
 
 = 1.1.1 - 10/1/2015 =
 * Feature - Add fees with the same name.
