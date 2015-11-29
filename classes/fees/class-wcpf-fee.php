@@ -31,10 +31,12 @@ class WCPF_Fee {
 		foreach ( $already_applied_fees as $applied_fee ) {
 			// If the fee has the same name as a fee already in the cart,
 			// then add the fee amounts together and present as a single fee.
-			if ( $applied_fee->name == $fee_data['name'] && apply_filters( 'wcpf_add_same_name_fees', true ) && get_option('wcpf_name_conflicts') === 'combine' ) {
-				$applied_fee->amount += $fee_data['amount'];
-				do_action( 'wcpf_fee_names_combined', $applied_fee, $fee_data );
-				return;
+			if ( $applied_fee->name == $fee_data['name'] && apply_filters( 'wcpf_add_same_name_fees', true ) ) {
+				if ( get_option( 'wcpf_name_conflicts' ) === 'combine' || empty( get_option( 'wcpf_name_conflicts' ) ) ) {
+					$applied_fee->amount += $fee_data['amount'];
+					do_action( 'wcpf_fee_names_combined', $applied_fee, $fee_data );
+					return;
+				}
 			}
 		}
 		
