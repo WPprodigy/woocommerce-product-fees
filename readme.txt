@@ -3,7 +3,7 @@ Contributors: woothemes, iCaleb
 Tags: woocommerce, woocommerce fees, woocommerce surcharge, product fees, product surcharge, additional fees, product based fees
 Requires at least: 4.0
 Tested up to: 4.6
-Stable tag: 1.2
+Stable tag: 1.2.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -85,6 +85,9 @@ Bugs can be reported either in the support forum or preferably on the [WooCommer
 4. Fees shown at checkout.
 
 == Changelog ==
+
+= 1.2.1 =
+* Fix - Proper handling of Standard tax rate.
 
 = 1.2 - 11/29/2015 =
 * Feature - Abillity to assign a tax class to be used on fees.
