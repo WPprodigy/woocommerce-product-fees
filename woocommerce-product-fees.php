@@ -11,7 +11,7 @@
  * Domain Path: /languages/
  *
  * Requires at least: 4.0
- * Tested up to: 4.4
+ * Tested up to: 4.6
  *
  * Copyright: (c) 2015 Caleb Burks
  * License: GPL v3 or later

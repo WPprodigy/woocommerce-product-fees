@@ -2,7 +2,7 @@
 Contributors: woothemes, iCaleb
 Tags: woocommerce, woocommerce fees, woocommerce surcharge, product fees, product surcharge, additional fees, product based fees
 Requires at least: 4.0
-Tested up to: 4.4
+Tested up to: 4.6
 Stable tag: 1.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
