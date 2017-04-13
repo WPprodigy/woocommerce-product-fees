@@ -61,12 +61,12 @@ class WooCommerce_Product_Fees {
 
 			if ( 0 !== $values['variation_id'] ) {
 				// Get variation fee. Will return false if there is no fee.
-				$fee = new WCPF_Variation_Fee( $values['product_id'], $values['quantity'], $values['data']->price, $values['variation_id'] );
+				$fee = new WCPF_Variation_Fee( $values['product_id'], $values['quantity'], $values['data']->get_price(), $values['variation_id'] );
 			}
 
 			if ( ! $fee ) {
 				// Get product fee. Will return false if there is no fee.
-				$fee = new WCPF_Product_Fee( $values['product_id'], $values['quantity'], $values['data']->price );
+				$fee = new WCPF_Product_Fee( $values['product_id'], $values['quantity'], $values['data']->get_price() );
 			}
 
 			if ( $fee->return_fee() ) {
