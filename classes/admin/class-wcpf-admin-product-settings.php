@@ -18,7 +18,7 @@ class WCPF_Admin_Product_Settings {
 	public function __construct() {
 		// Add and save product settings.
 		add_action( 'woocommerce_product_write_panel_tabs', array( $this, 'create_product_panel_tab' ) );
-		add_action( 'woocommerce_product_write_panels', array( $this, 'product_settings_fields' ) );
+		add_action( 'woocommerce_product_data_panels', array( $this, 'product_settings_fields' ) );
 		add_action( 'woocommerce_process_product_meta', array( $this, 'save_product_settings_fields' ) );
 
 		// Add and save variation settings.
