@@ -14,6 +14,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class WooCommerce_Product_Fees {
+	/**
+	 * Internal tax class to identify the case in which taxes should not be applied
+	 * to product fees. An empty string cannot be used, as it represents the
+	 * Standard tax rate in WooCommece.
+	 *
+	 * @var string
+	 * @author Aelia <support@aelia.co>
+	 */
+	const NO_TAX_OPTION = '_no_tax';
 
 	/**
 	 * Constructor for the main product fees class.
@@ -46,7 +55,7 @@ class WooCommerce_Product_Fees {
 	 * Load Text Domain
 	 */
 	public function text_domain() {
-	 	load_plugin_textdomain( 'woocommerce-product-fees', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' ); 
+	 	load_plugin_textdomain( 'woocommerce-product-fees', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 	}
 
 	/**
@@ -73,7 +82,7 @@ class WooCommerce_Product_Fees {
 				$data = $fee->return_fee();
 				do_action( 'wcpf_before_fee_is_added', $data );
 				// Check if taxes need to be added.
-				if ( get_option( 'wcpf_fee_tax_class', '' ) !== '' ) {
+				if ( get_option( 'wcpf_fee_tax_class', self::NO_TAX_OPTION ) !== self::NO_TAX_OPTION ) {
 					WC()->cart->add_fee( $data['name'], $data['amount'], true, get_option( 'wcpf_fee_tax_class' ) );
 				} else {
 					WC()->cart->add_fee( $data['name'], $data['amount'], false );

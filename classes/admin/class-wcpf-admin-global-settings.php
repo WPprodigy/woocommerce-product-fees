@@ -52,7 +52,10 @@ class WCPF_Admin_Global_Settings {
 				'default'  => 'title',
 				'type'     => 'select',
 				'class'    => 'wc-enhanced-select',
-				'options'  => array( '' => __( 'No taxes for fees', 'woocommerce-product-fees' ) ) + $this->tax_classes(),
+				// The "No taxes" option cannot use an empty string as an ID. Such ID is
+				// already reserved for the Standard tax rate.
+				// @author Aelia <support@aelia.co>
+				'options'  => array( WooCommerce_Product_Fees::NO_TAX_OPTION => __( 'No taxes for fees', 'woocommerce-product-fees' ) ) + $this->tax_classes(),
 				'desc_tip' =>  true,
 			),
 
@@ -76,8 +79,13 @@ class WCPF_Admin_Global_Settings {
 	}
 
 	public function tax_classes() {
-		$tax_classes     = WC_Tax::get_tax_classes();
+		$tax_classes = WC_Tax::get_tax_classes();
+
 		$classes_options = array();
+		// We must add the Standard Tax Rate manually, as it's not returned by
+		// WC_Tax::get_tax_classes()
+		// @author Aelia <support@aelia.co>
+		$classes_options[''] = __( 'Standard', 'woocommerce' );
 
 		if ( ! empty( $tax_classes ) ) {
 			foreach ( $tax_classes as $class ) {
