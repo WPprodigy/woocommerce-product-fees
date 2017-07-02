@@ -17,18 +17,22 @@ class WCPF_Admin_Global_Settings {
 
 	public function __construct() {
 		// Create WooCommerce > Settings > Products > Fees menu item.
-		add_action( 'woocommerce_get_sections_products', array( $this, 'add_menu_item' ) );
+		add_action( 'woocommerce_get_sections_products', array( $this, 'add_product_section' ), 10 );
 
 		// Add settings to the page.
-		add_action( 'woocommerce_get_settings_products', array( $this, 'output' ), null, 2 );
+		add_action( 'woocommerce_get_settings_products', array( $this, 'product_settings_output' ), 10, 2 );
+
+		// Add and save the coupon setting.
+		add_action( 'woocommerce_coupon_options', array( $this, 'add_coupon_setting' ), 10, 2 );
+		add_action( 'woocommerce_coupon_options_save', array( $this, 'save_coupon_setting' ), 10, 2 );
 	}
 
-	public function add_menu_item( $sections ) {
+	public function add_product_section( $sections ) {
 		$sections['fees'] = __( 'Product Fees', 'woocommerce-product-fees' );
 		return $sections;
 	}
 
-	public function output( $settings, $current_section ) {
+	public function product_settings_output( $settings, $current_section ) {
 		if ( 'fees' == $current_section ) {
 			$settings = $this->settings_fields();
 		}
@@ -95,6 +99,22 @@ class WCPF_Admin_Global_Settings {
 		}
 
 		return $classes_options;
+	}
+
+	public function add_coupon_setting( $coupon_id, $coupon ) {
+		woocommerce_wp_checkbox( array(
+			'id'          => 'wcpf_coupon_remove_fees',
+			'label'       => __( 'Remove product fees', 'woocommerce-product-fees' ),
+			'description' => __( 'Check this box if the coupon should remove product fees.', 'woocommerce-product-fees' ),
+			'value'       => $coupon->get_meta( 'wcpf_coupon_remove_fees' ),
+		) );
+	}
+
+	public function save_coupon_setting( $post_id, $coupon ) {
+		$value = isset( $_POST['wcpf_coupon_remove_fees'] ) ? 'yes' : '';
+
+		$coupon->add_meta_data( 'wcpf_coupon_remove_fees', $value, true );
+		$coupon->save_meta_data();
 	}
 
 } // End Class

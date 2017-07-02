@@ -55,6 +55,18 @@ class WooCommerce_Product_Fees {
 	 * @access public
 	 */
 	public function add_fees( $cart ) {
+
+		// Look for a fee-removing coupon.
+		$cart_coupons = $cart->get_coupons();
+		if ( ! empty( $cart_coupons ) ) {
+				foreach ( $cart_coupons as $coupon ) {
+					if ( 'yes' === $coupon->get_meta( 'wcpf_coupon_remove_fees' ) ) {
+						// Exit now. No need to look for fees.
+						return;
+					}
+				}
+		}
+
 		foreach( $cart->get_cart() as $cart_item => $values ) {
 			$_product = $values['data'];
 			$fee      = false;
