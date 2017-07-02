@@ -56,14 +56,14 @@ class WooCommerce_Product_Fees {
 	 */
 	public function add_fees( $cart ) {
 		foreach( $cart->get_cart() as $cart_item => $values ) {
-			// Assume there is no fee.
-			$fee = false;
+			$_product = $values['data'];
+			$fee      = false;
 
 			// Data we need from each product in the cart.
 			$product_data = array(
 				'id'     => $values['product_id'],
 				'qty'    => $values['quantity'],
-				'price'  => $values['data']->get_price()
+				'price'  => $_product->get_price()
 			);
 
 			// Check first for a variation specific fee, and use that if it exists.
@@ -80,17 +80,33 @@ class WooCommerce_Product_Fees {
 			}
 
 			if ( $fee ) {
-				$fee_data = $fee->return_fee();
-				do_action( 'wcpf_before_fee_is_added', $fee_data );
+				$fee_data      = $fee->return_fee();
+				$fee_tax_class = get_option( 'wcpf_fee_tax_class', '_no_tax' );
 
-				// Check if taxes need to be added.
-				if ( wc_tax_enabled() && '_no_tax' !== get_option( 'wcpf_fee_tax_class', '_no_tax' ) ) {
-					$cart->add_fee( $fee_data['name'], $fee_data['amount'], true, get_option( 'wcpf_fee_tax_class' ) );
-				} else {
-					$cart->add_fee( $fee_data['name'], $fee_data['amount'], false );
+				// Change fee tax settings to the product's tax settings.
+				if ( 'inherit_product_tax' === $fee_tax_class ) {
+					$product_tax_status = $_product->get_tax_status();
+					$product_tax_class  = $_product->get_tax_class();
+
+					if ( 'taxable' === $product_tax_status ) {
+						$fee_tax_class = $product_tax_class;
+					} else {
+						$fee_tax_class = '_no_tax';
+					}
 				}
 
-				do_action( 'wcpf_after_fee_is_added', $fee_data );
+				do_action( 'wcpf_before_fee_is_added', $fee_data, $_product );
+
+				// Check if taxes need to be added.
+				if ( wc_tax_enabled() && '_no_tax' !== $fee_tax_class ) {
+					// Add fee with taxes.
+					$cart->add_fee( $fee_data['name'], $fee_data['amount'], true, $fee_tax_class );
+				} else {
+					// Add fee without taxes.
+					$cart->add_fee( $fee_data['name'], $fee_data['amount'] );
+				}
+
+				do_action( 'wcpf_after_fee_is_added', $fee_data, $_product );
 			}
 		}
 	}

@@ -52,7 +52,7 @@ class WCPF_Admin_Global_Settings {
 				'default'  => 'title',
 				'type'     => 'select',
 				'class'    => 'wc-enhanced-select',
-				'options'  => array( '_no_tax' => __( 'No taxes for fees', 'woocommerce-product-fees' ) ) + $this->tax_classes(),
+				'options'  => $this->tax_classes(),
 				'desc_tip' =>  true,
 			),
 
@@ -78,6 +78,11 @@ class WCPF_Admin_Global_Settings {
 	public function tax_classes() {
 		$tax_classes     = WC_Tax::get_tax_classes();
 		$classes_options = array();
+
+		$classes_options['_no_tax'] = __( 'No taxes for fees', 'woocommerce-product-fees' );
+
+		// Add support for product-level tax settings.
+		$classes_options['inherit_product_tax'] = __( 'Fee tax class based on the fee\'s product', 'woocommerce-product-fees' );
 
 		// Manually add the standard tax as it's not returned by WC_Tax::get_tax_classes().
 		// Thanks @daigo75
