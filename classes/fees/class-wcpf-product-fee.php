@@ -19,20 +19,24 @@ class WCPF_Product_Fee extends WCPF_Fee {
 	public $id;
 
 	/** @var int Product Quantity */
-	public $qty   = 1;
+	public $qty = 1;
 
 	/** @var int Product Price */
 	public $price = 0;
+
+	/** @var int Main Cart Instance */
+	public $cart;
 
 	/**
 	 * Constructor for the indivual product fee class.
 	 *
 	 * @access public
 	 */
-	public function __construct( $id, $qty, $price ) {
-		$this->id    = $id;
-		$this->qty   = $qty;
-		$this->price = $price;
+	public function __construct( $product_data, $cart ) {
+		$this->id    = $product_data['id'];
+		$this->qty   = $product_data['qty'];
+		$this->price = $product_data['price'];
+		$this->cart  = $cart;
 	}
 
 	/**
@@ -47,7 +51,7 @@ class WCPF_Product_Fee extends WCPF_Fee {
 		// Check for a fee name and fee amount in the product settings
 		if ( get_post_meta( $id, 'product-fee-name', true ) != '' && get_post_meta( $id, 'product-fee-amount', true ) != '' ) {
 			$fee = array(
-				'name' => get_post_meta( $id, 'product-fee-name', true ), 
+				'name' => get_post_meta( $id, 'product-fee-name', true ),
 				'amount' =>	get_post_meta( $id, 'product-fee-amount', true ),
 				'multiplier' => get_post_meta( $id, 'product-fee-multiplier', true ),
 				'product_id' => $id
@@ -113,7 +117,7 @@ class WCPF_Product_Fee extends WCPF_Fee {
 	public function return_fee() {
 		$fee_data = $this->quantity_multiply();
 
-		return parent::get_fee( $fee_data );
+		return parent::get_fee( $fee_data, $this->cart );
 	}
 
 }

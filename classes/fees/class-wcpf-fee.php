@@ -20,13 +20,14 @@ class WCPF_Fee {
 	 *
 	 * @access public
 	 */
-	public function get_fee( $fee ) {
+	public function get_fee( $fee, $cart ) {
 		// Abort if there is no fee data.
 		if ( false == $fee ) {
 			return false;
 		}
+
 		$fee_data = apply_filters( 'wcpf_filter_fee_data',  $fee );
-		$already_applied_fees = WC()->cart->fees;
+		$already_applied_fees = $cart->get_fees();
 
 		foreach ( $already_applied_fees as $applied_fee ) {
 			// If the fee has the same name as a fee already in the cart,
@@ -39,7 +40,7 @@ class WCPF_Fee {
 				}
 			}
 		}
-		
+
 		return $fee_data;
 	}
 

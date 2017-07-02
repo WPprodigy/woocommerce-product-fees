@@ -23,9 +23,9 @@ class WCPF_Variation_Fee extends WCPF_Product_Fee {
 	 *
 	 * @access public
 	 */
-	public function __construct( $id, $qty, $price, $variation_id ) {
-		parent::__construct( $id, $qty, $price );
-		$this->variation_id = $variation_id;
+	public function __construct( $product_data, $cart ) {
+		parent::__construct( $product_data, $cart );
+		$this->variation_id = $product_data['variation_id'];
 	}
 
 	/**
@@ -40,7 +40,7 @@ class WCPF_Variation_Fee extends WCPF_Product_Fee {
 		// Check if the variation has a fee
 		if ( get_post_meta( $variation_id, 'product-fee-name', true ) != '' && get_post_meta( $variation_id, 'product-fee-amount', true ) != '' ) {
 			$fee = array(
-				'name' => get_post_meta( $variation_id, 'product-fee-name', true ), 
+				'name' => get_post_meta( $variation_id, 'product-fee-name', true ),
 				'amount' =>	get_post_meta( $variation_id, 'product-fee-amount', true ),
 				'multiplier' => get_post_meta( $variation_id, 'product-fee-multiplier', true ),
 				'product_id' => $variation_id
@@ -62,7 +62,7 @@ class WCPF_Variation_Fee extends WCPF_Product_Fee {
 		$variation_fee_data = $this->get_variation_fee_data();
 		$fee_data = parent::quantity_multiply( $variation_fee_data );
 
-		return WCPF_Fee::get_fee( $fee_data );
+		return WCPF_Fee::get_fee( $fee_data, $this->cart );
 	}
 
 }

@@ -46,7 +46,7 @@ class WooCommerce_Product_Fees {
 	 * Load Text Domain
 	 */
 	public function text_domain() {
-	 	load_plugin_textdomain( 'woocommerce-product-fees', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' ); 
+	 	load_plugin_textdomain( 'woocommerce-product-fees', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 	}
 
 	/**
@@ -54,31 +54,43 @@ class WooCommerce_Product_Fees {
 	 *
 	 * @access public
 	 */
-	public function add_fees() {
-		foreach( WC()->cart->get_cart() as $cart_item => $values ) {
+	public function add_fees( $cart ) {
+		foreach( $cart->get_cart() as $cart_item => $values ) {
 			// Assume there is no fee.
 			$fee = false;
 
+			// Data we need from each product in the cart.
+			$product_data = array(
+				'id'     => $values['product_id'],
+				'qty'    => $values['quantity'],
+				'price'  => $values['data']->get_price()
+			);
+
+			// Check first for a variation specific fee, and use that if it exists.
 			if ( 0 !== $values['variation_id'] ) {
+				$product_data['variation_id'] = $values['variation_id'];
+
 				// Get variation fee. Will return false if there is no fee.
-				$fee = new WCPF_Variation_Fee( $values['product_id'], $values['quantity'], $values['data']->get_price(), $values['variation_id'] );
+				$fee = new WCPF_Variation_Fee( $product_data, $cart );
 			}
 
 			if ( ! $fee ) {
 				// Get product fee. Will return false if there is no fee.
-				$fee = new WCPF_Product_Fee( $values['product_id'], $values['quantity'], $values['data']->get_price() );
+				$fee = new WCPF_Product_Fee( $product_data, $cart );
 			}
 
-			if ( $fee->return_fee() ) {
-				$data = $fee->return_fee();
-				do_action( 'wcpf_before_fee_is_added', $data );
+			if ( $fee ) {
+				$fee_data = $fee->return_fee();
+				do_action( 'wcpf_before_fee_is_added', $fee_data );
+
 				// Check if taxes need to be added.
 				if ( get_option( 'wcpf_fee_tax_class', '' ) !== '' ) {
-					WC()->cart->add_fee( $data['name'], $data['amount'], true, get_option( 'wcpf_fee_tax_class' ) );
+					$cart->add_fee( $fee_data['name'], $fee_data['amount'], true, get_option( 'wcpf_fee_tax_class' ) );
 				} else {
-					WC()->cart->add_fee( $data['name'], $data['amount'], false );
+					$cart->add_fee( $fee_data['name'], $fee_data['amount'], false );
 				}
-				do_action( 'wcpf_after_fee_is_added', $data );
+
+				do_action( 'wcpf_after_fee_is_added', $fee_data );
 			}
 		}
 	}
