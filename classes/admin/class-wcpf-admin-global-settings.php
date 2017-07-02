@@ -52,7 +52,7 @@ class WCPF_Admin_Global_Settings {
 				'default'  => 'title',
 				'type'     => 'select',
 				'class'    => 'wc-enhanced-select',
-				'options'  => array( '' => __( 'No taxes for fees', 'woocommerce-product-fees' ) ) + $this->tax_classes(),
+				'options'  => array( '_no_tax' => __( 'No taxes for fees', 'woocommerce-product-fees' ) ) + $this->tax_classes(),
 				'desc_tip' =>  true,
 			),
 
@@ -78,6 +78,10 @@ class WCPF_Admin_Global_Settings {
 	public function tax_classes() {
 		$tax_classes     = WC_Tax::get_tax_classes();
 		$classes_options = array();
+
+		// Manually add the standard tax as it's not returned by WC_Tax::get_tax_classes().
+		// Thanks @daigo75
+		$classes_options[''] = __( 'Standard', 'woocommerce' );
 
 		if ( ! empty( $tax_classes ) ) {
 			foreach ( $tax_classes as $class ) {

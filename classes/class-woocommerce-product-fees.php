@@ -84,7 +84,7 @@ class WooCommerce_Product_Fees {
 				do_action( 'wcpf_before_fee_is_added', $fee_data );
 
 				// Check if taxes need to be added.
-				if ( get_option( 'wcpf_fee_tax_class', '' ) !== '' ) {
+				if ( wc_tax_enabled() && '_no_tax' !== get_option( 'wcpf_fee_tax_class', '_no_tax' ) ) {
 					$cart->add_fee( $fee_data['name'], $fee_data['amount'], true, get_option( 'wcpf_fee_tax_class' ) );
 				} else {
 					$cart->add_fee( $fee_data['name'], $fee_data['amount'], false );
