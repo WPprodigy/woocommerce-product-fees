@@ -90,6 +90,7 @@ Bugs can be reported either in the support forum or preferably on the [WooCommer
 
 = 1.3.0 - xx/xx/xxxx =
 * Feature - Coupons have an option to remove fees in WC 3.0+
+* Feature - Support for CSV Import/Export in WC 3.1+
 * Feature - Fees have an option inherit product tax settings.
 * Patch - WooCommerce 3.0 Compatibility.
 * Fix - The standard tax rate wasn't working/available.
