@@ -58,7 +58,7 @@ class WooCommerce_Product_Fees {
 
 		// Look for a fee-removing coupon.
 		$cart_coupons = $cart->get_coupons();
-		if ( ! empty( $cart_coupons ) ) {
+		if ( ! empty( $cart_coupons ) && version_compare( WC_VERSION, '3.0', '>=' ) ) {
 				foreach ( $cart_coupons as $coupon ) {
 					if ( 'yes' === $coupon->get_meta( 'wcpf_coupon_remove_fees' ) ) {
 						// Exit now. No need to look for fees.

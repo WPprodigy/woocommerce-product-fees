@@ -23,8 +23,10 @@ class WCPF_Admin_Global_Settings {
 		add_action( 'woocommerce_get_settings_products', array( $this, 'product_settings_output' ), 10, 2 );
 
 		// Add and save the coupon setting.
-		add_action( 'woocommerce_coupon_options', array( $this, 'add_coupon_setting' ), 10, 2 );
-		add_action( 'woocommerce_coupon_options_save', array( $this, 'save_coupon_setting' ), 10, 2 );
+		if ( version_compare( WC_VERSION, '3.0', '>=' ) ) {
+			add_action( 'woocommerce_coupon_options', array( $this, 'add_coupon_setting' ), 10, 2 );
+			add_action( 'woocommerce_coupon_options_save', array( $this, 'save_coupon_setting' ), 10, 2 );
+		}
 	}
 
 	public function add_product_section( $sections ) {
