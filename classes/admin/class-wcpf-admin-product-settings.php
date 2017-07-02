@@ -30,7 +30,7 @@ class WCPF_Admin_Product_Settings {
 	}
 
 	public function create_product_panel_tab() {
-		echo '<li class="fees_product_tab product_fee_options"><a href="#fees_product_data">' . __( 'Product Fees', 'woocommerce-product-fees' ).'</a></li>';
+		echo '<li class="fees_product_tab product_fee_options"><a href="#fees_product_data"><span>' . __( 'Product Fees', 'woocommerce-product-fees' ).'</span></a></li>';
 	}
 
 	public function product_settings_fields() {
@@ -44,7 +44,7 @@ class WCPF_Admin_Product_Settings {
 		woocommerce_wp_text_input( array( 'id' => 'product-fee-amount', 'label' => sprintf( __( 'Fee Amount (%s)', 'woocommerce-product-fees' ), get_woocommerce_currency_symbol() ), 'data_type' => 'price', 'placeholder' => __('Monetary Decimal or Percentage', 'woocommerce-product-fees'), 'desc_tip' => 'true', 'description' => __( 'Enter a monetary decimal without any currency symbols or thousand seperators. This field also accepts percentages.', 'woocommerce-product-fees' ) ) );
 
 		do_action( 'wcpf_add_product_settings_group_one' );
-		
+
 		echo '</div>';
 		echo '<div class="options_group">';
 
@@ -125,9 +125,10 @@ class WCPF_Admin_Product_Settings {
 		<style type='text/css'>
 			#woocommerce-product-data ul.product_data_tabs li.product_fee_options a:before {
 				content: '\\e01e';
+				font-family: 'WooCommerce';
 			}
 			.product-fee-multiplier .checkbox {
-				margin: 0 6px;
+				margin: 3px 6px 0 0 !important;
 			}
 		</style>
 		";
