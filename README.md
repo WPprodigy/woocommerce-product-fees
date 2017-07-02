@@ -17,7 +17,7 @@ Product Settings:
 ### Variation Fees
 There are also settings fields inside of each variation. If the variation does not have a fee, it will fallback and look to use the product fee if one exists.
 
-Variation Settings: 
+Variation Settings:
 ![Image of Variation Settings](images/variation-settings.png)
 
 ### Plugin Settings
@@ -29,6 +29,9 @@ For the plugin settings, you can go **WooCommerce > Settings > Products > Produc
 Product Fee Settings:
 ![Image of Checkout with Fees](images/product-fees-settings.png)
 
+Optional Coupon Setting:
+![Image of Coupon Settings with new fee option](images/coupon-settings.png)
+
 Fees Shown at Checkout:
 ![Image of Checkout with Fees](images/checkout.png)
 
@@ -37,10 +40,11 @@ Fees Shown at Checkout:
 I have kept this plugin simple on purpose. It is very lightweight and should not conflict with any other plugins or themes. Here are the features included in the plugin:
 
 * Percentage based fees that go off of the product's price.
-* A quantity multiplier that can be toggled on/off per product and per variation.
 * Variation specific fees.
+* A quantity multiplier that can be toggled on/off per product and per variation.
 * Option to combine fees with the same name.
-* Abillity to assign a tax class to be used on fees.
+* Ability to assign a tax class to be used on fees.
+* Coupon setting that will remove fees when added.
 
 ## Support
 This repository is not suitable for support. Please don't use the issue tracker for support requests, but for plugin issues only. Support can take place in the [WordPress.org forums](https://wordpress.org/support/plugin/woocommerce-product-fees).

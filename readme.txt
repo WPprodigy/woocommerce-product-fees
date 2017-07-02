@@ -31,14 +31,15 @@ For the plugin settings, you can go **WooCommerce > Settings > Products > Produc
 I have kept this plugin simple on purpose. It is very lightweight and should not conflict with any other plugins or themes. Here are the features included in the plugin:
 
 * Percentage based fees that go off of the product's price.
-* A quantity multiplier that can be toggled on/off per product and per variation.
 * Variation specific fees.
+* A quantity multiplier that can be toggled on/off per product and per variation.
 * Option to combine fees with the same name.
-* Abillity to assign a tax class to be used on fees.
+* Ability to assign a tax class to be used on fees.
+* Coupon setting that will remove fees when added.
 
 = Contributions =
 
-If you’re interested in contributing to WooCommerce Product Fees - head over to the [WooCommerce Product Fees GitHub Repository](https://github.com/WPprodigy/WooCommerce-Product-Fees) to find out how you can pitch in.
+If you’re interested in contributing to WooCommerce Product Fees - head over to the [WooCommerce Product Fees GitHub Repository](https://github.com/WPprodigy/woocommerce-product-fees) to find out how you can pitch in.
 
 Thanks to [Ben Smith](https://profiles.wordpress.org/benjamin-smith) for contributing the plugin's banner and icon image designs.
 
@@ -71,11 +72,11 @@ You can post here in the support section at WordPress.org. Just click on the Sup
 
 = Where can I request new features? =
 
-Feel free to submit a feature request as an issue at the [WooCommerce Product Fees GitHub Repository](https://github.com/WPprodigy/WooCommerce-Product-Fees). Be sure to check if this has already been suggested though. You can also suggest a feature in the support forums here at WordPress.org using the Support tab on the right.
+Feel free to submit a feature request as an issue at the [WooCommerce Product Fees GitHub Repository](https://github.com/WPprodigy/woocommerce-product-fees). Be sure to check if this has already been suggested though. You can also suggest a feature in the support forums here at WordPress.org using the Support tab on the right.
 
 = Where can I report bugs or contribute to the project? =
 
-Bugs can be reported either in the support forum or preferably on the [WooCommerce Product Fees GitHub Repository](https://github.com/WPprodigy/WooCommerce-Product-Fees).
+Bugs can be reported either in the support forum or preferably on the [WooCommerce Product Fees GitHub Repository](https://github.com/WPprodigy/woocommerce-product-fees).
 
 == Screenshots ==
 
@@ -83,11 +84,21 @@ Bugs can be reported either in the support forum or preferably on the [WooCommer
 2. The variation settings.
 3. The product fees settings area.
 4. Fees shown at checkout.
+5. Optional coupon setting.
 
 == Changelog ==
 
-= 1.2 - 11/29/2015 =
-* Feature - Abillity to assign a tax class to be used on fees.
+= 1.3.0 - xx/xx/xxxx =
+* Feature - Coupons have an option to remove fees in WC 3.0+
+* Feature - Fees have an option inherit product tax settings.
+* Patch - WooCommerce 3.0 Compatibility.
+* Fix - The standard tax rate wasn't working/available.
+* Fix - Added support for localized decimal point separators.
+* Fix - Added WC Subscriptions compatibility.
+* Fix - Fees with the same letters but different capitalizations will now match.
+
+= 1.2.0 - 11/29/2015 =
+* Feature - Ability to assign a tax class to be used on fees.
 * Feature - Adds a setting to choose whether to combine fees with the same name or not.
 * Feature - Variation products can now use the fee multiplier on the global product level.
 * Fix - Various calculation issues in regards to multiple variation children being in the cart.
@@ -98,10 +109,10 @@ Bugs can be reported either in the support forum or preferably on the [WooCommer
 * Feature - Add fees with the same name.
 * Fix - Display non-variation fees.
 
-= 1.1 - 09/30/2015 =
+= 1.1.0 - 09/30/2015 =
 * Feature - Variation specific fees.
 * Fix - Save blank fee names and values.
 
-= 1.0 - 08/25/2015 =
+= 1.0.0 - 08/25/2015 =
 * Feature - Percentage based fees.
 * Feature - Multiply by product quantity.
