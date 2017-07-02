@@ -56,6 +56,7 @@ class WCPF_Product_Fee extends WCPF_Fee {
 				'multiplier' => get_post_meta( $id, 'product-fee-multiplier', true ),
 				'product_id' => $id
 			);
+
 			return apply_filters( 'wcpf_indivual_product_fee_data',  $fee );
 		} else {
 			// Return false if the product has no fee.
@@ -92,18 +93,22 @@ class WCPF_Product_Fee extends WCPF_Fee {
 		}
 
 		// Return if the product has no fee data.
-		if ( $fee_data == false ) {
+		if ( ! $fee_data ) {
 			return false;
 		}
 
-		// Run the percentage check.
-		$fee_amount = $this->percentage_conversion( $fee_data['amount'] );
+		// Replace with a standard decimal place for calculations.
+		$decimal_separator = wc_get_price_decimal_separator();
+		$fee_amount = str_replace( $decimal_separator, '.', $fee_data['amount'] );
+
+		// Run the percentage check, and convert to a standard decimal place.
+		$converted_amount = $this->percentage_conversion( $fee_amount );
 
 		// Multiply the fee by the quantity if necessary.
 		if ( $fee_data['multiplier'] == 'yes' ) {
-			$fee_data['amount'] = $this->qty * $fee_amount;
+			$fee_data['amount'] = $this->qty * $converted_amount;
 		} else {
-			$fee_data['amount'] = $fee_amount;
+			$fee_data['amount'] = $converted_amount;
 		}
 
 		return $fee_data;
