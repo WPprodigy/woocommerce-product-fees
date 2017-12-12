@@ -30,7 +30,7 @@ class WCPF_Admin_Product_Settings {
 	}
 
 	public function create_product_panel_tab() {
-		echo '<li class="fees_product_tab product_fee_options"><a href="#fees_product_data"><span>' . __( 'Product Fees', 'woocommerce-product-fees' ).'</span></a></li>';
+		echo '<li class="fees_product_tab product_fee_options"><a href="#fees_product_data"><span>' . __( '<span>Product Fees</span>', 'woocommerce-product-fees' ).'</span></a></li>';
 	}
 
 	public function product_settings_fields() {
@@ -138,7 +138,7 @@ class WCPF_Admin_Product_Settings {
 		echo "
 		<style type='text/css'>
 			#woocommerce-product-data ul.product_data_tabs li.product_fee_options a:before {
-				content: '\\e01e';
+				content: '\\f157';
 				font-family: 'WooCommerce';
 			}
 			.product-fee-multiplier .checkbox {
