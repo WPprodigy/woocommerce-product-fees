@@ -2,7 +2,7 @@
 /**
  * WooCommerce Product Fees
  *
- * Creates and saves the product and variation settings.
+ * Create the product and variation settings.
  *
  * @class 	WCPF_Admin_Product_Settings
  * @author 	Caleb Burks
@@ -148,4 +148,6 @@ class WCPF_Admin_Product_Settings {
 		";
 	}
 
-} // End Class
+}
+
+return new WCPF_Admin_Product_Settings();
