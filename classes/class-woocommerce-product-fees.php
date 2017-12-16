@@ -82,16 +82,16 @@ class WooCommerce_Product_Fees {
 			if ( 0 !== $values['variation_id'] ) {
 				$product_data['variation_id'] = $values['variation_id'];
 
-				// Get variation fee. Will return false if there is no fee.
+				// Get variation fee.
 				$fee = new WCPF_Variation_Fee( $product_data, $cart );
 			}
 
 			if ( ! $fee ) {
-				// Get product fee. Will return false if there is no fee.
+				// Get product fee.
 				$fee = new WCPF_Product_Fee( $product_data, $cart );
 			}
 
-			if ( $fee ) {
+			if ( $fee && $fee->return_fee() ) {
 				$fee_data      = $fee->return_fee();
 				$fee_tax_class = get_option( 'wcpf_fee_tax_class', '_no_tax' );
 
