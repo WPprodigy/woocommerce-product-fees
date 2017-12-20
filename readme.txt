@@ -88,15 +88,17 @@ Bugs can be reported either in the support forum or preferably on the [WooCommer
 
 == Changelog ==
 
-= 1.3.0 - xx/xx/xxxx =
+= 1.3.0 - 12/20/2017 =
 * Feature - Coupons have an option to remove fees in WC 3.0+
 * Feature - Support for CSV Import/Export in WC 3.1+
-* Feature - Fees have an option inherit product tax settings.
+* Feature - Fees have an option to inherit product tax settings.
 * Patch - WooCommerce 3.0 Compatibility.
 * Fix - The standard tax rate wasn't working/available.
 * Fix - Added support for localized decimal point separators.
 * Fix - Added WC Subscriptions compatibility.
-* Fix - Fees with the same letters but different capitalizations will now match.
+* Fix - Fees with the same letters but different capitalizations will now match and can be merged.
+* Fix - Don't add $0 fees for every product.
+* Refactor - Sorry, had to do it again :). Reduced code and prepared for adding automated testing.
 
 = 1.2.0 - 11/29/2015 =
 * Feature - Ability to assign a tax class to be used on fees.

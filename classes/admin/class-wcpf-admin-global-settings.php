@@ -2,7 +2,7 @@
 /**
  * WooCommerce Product Fees
  *
- * Creates and saves the global settings.
+ * Creates global product settings, coupon options, and adds csv import support.
  *
  * @class 	WCPF_Admin_Global_Settings
  * @author 	Caleb Burks
@@ -202,4 +202,6 @@ class WCPF_Admin_Global_Settings {
 		return $product->get_meta( 'product-fee-multiplier', true, 'edit' );
 	}
 
-} // End Class
+}
+
+return new WCPF_Admin_Global_Settings();
