@@ -47,7 +47,7 @@ class WooCommerce_Product_Fees {
 	 */
 	public function product_contains_fee_data( $id ) {
 		$fee_name   = get_post_meta( $id, 'product-fee-name', true );
-		$fee_amount = get_post_meta( $id, 'product-fee-amount', true );
+		$fee_amount = str_replace( wc_get_price_decimal_separator(), '.', get_post_meta( $id, 'product-fee-amount', true ) );
 
 		if ( '' !== $fee_name && '' !== $fee_amount && $fee_amount > 0 ) {
 			return true;
