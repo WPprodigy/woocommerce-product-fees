@@ -57,43 +57,42 @@ class WCPF_Admin_Product_Settings {
 		echo '</div>';
 	}
 
-	public function save_product_settings_fields( $post_id ){
-		$another_field_updated = false;
+	public function save_product_settings_fields( $post_id ) {
+		// Note: Nonces are handled in WC core before this point.
 
-		// Text Field - Fee Name
-		$product_fee_name_text_field = $_POST['product-fee-name'];
-		if( ! empty( $product_fee_name_text_field ) || get_post_meta( $post_id, 'product-fee-name', true ) != '' ) {
-			update_post_meta( $post_id, 'product-fee-name', esc_attr( $product_fee_name_text_field ) );
-			$another_field_updated = true;
+		foreach ( [ 'product-fee-name', 'product-fee-amount' ] as $field ) {
+			$field_value = isset( $_POST[ $field ] ) ? sanitize_text_field( $_POST[ $field ] ) : ''; // phpcs:ignore CSRF
+			if ( $field_value !== get_post_meta( $post_id, $field, true ) ) {
+				if ( '' === $field_value ) {
+					delete_post_meta( $post_id, $field );
+				} else {
+					update_post_meta( $post_id, $field, $field_value );
+				}
+			}
 		}
 
-		// Text Field - Fee Amount
-		$product_fee_amount_text_field = $_POST['product-fee-amount'];
-		if( ! empty( $product_fee_amount_text_field ) || get_post_meta( $post_id, 'product-fee-amount', true ) != '' ) {
-			update_post_meta( $post_id, 'product-fee-amount', esc_attr( $product_fee_amount_text_field ) );
-			$another_field_updated = true;
-		}
-
-		// Only save if one of the other fields is being saved.
-		if ( $another_field_updated ) {
-			// Check Box - Fee Multiply Option
-			$product_fee_multiplier_checkbox = isset( $_POST['product-fee-multiplier'] ) ? 'yes' : 'no';
-			update_post_meta( $post_id, 'product-fee-multiplier', $product_fee_multiplier_checkbox );
+		$product_fee_multiplier_checkbox = isset( $_POST['product-fee-multiplier'] ) ? 'yes' : ''; // phpcs:ignore CSRF
+		if ( $product_fee_multiplier_checkbox !== get_post_meta( $post_id, 'product-fee-multiplier', true ) ) {
+			if ( '' === $product_fee_multiplier_checkbox ) {
+				delete_post_meta( $post_id, 'product-fee-multiplier' );
+			} else {
+				update_post_meta( $post_id, 'product-fee-multiplier', $product_fee_multiplier_checkbox );
+			}
 		}
 	}
 
 	public function variation_settings_fields( $loop, $variation_data, $variation ) {
 		// Set placeholders based on global product level fees.
 		$parent_id = $variation->post_parent;
-		if ( get_post_meta( $parent_id, 'product-fee-name', true ) != '' && get_post_meta( $parent_id, 'product-fee-amount', true ) != '' ) {
+		if ( get_post_meta( $parent_id, 'product-fee-name', true ) !== '' && get_post_meta( $parent_id, 'product-fee-amount', true ) !== '' ) {
 			$placeholders = array(
-				'name' => get_post_meta( $parent_id, 'product-fee-name', true ),
-				'amount' =>	get_post_meta( $parent_id, 'product-fee-amount', true )
+				'name'   => get_post_meta( $parent_id, 'product-fee-name', true ),
+				'amount' => get_post_meta( $parent_id, 'product-fee-amount', true )
 			);
 		} else {
 			$placeholders = array(
-				'name' => __('Product Fee', 'woocommerce-product-fees'),
-				'amount' =>	__('Monetary Decimal or Percentage', 'woocommerce-product-fees'),
+				'name'   => __('Product Fee', 'woocommerce-product-fees'),
+				'amount' => __('Monetary Decimal or Percentage', 'woocommerce-product-fees'),
 			);
 		}
 
@@ -110,27 +109,26 @@ class WCPF_Admin_Product_Settings {
 	}
 
 	public function save_variation_settings_fields( $post_id ) {
-		$another_field_updated = false;
+		// Note: Nonces are handled in WC core before this point.
 
-		// Text Field - Fee Name
-		$product_fee_name_text_field = $_POST['product-fee-name'][ $post_id ];
-		if( ! empty( $product_fee_name_text_field ) || get_post_meta( $post_id, 'product-fee-name', true ) != '' ) {
-			update_post_meta( $post_id, 'product-fee-name', esc_attr( $product_fee_name_text_field ) );
-			$another_field_updated = true;
+		foreach ( [ 'product-fee-name', 'product-fee-amount' ] as $field ) {
+			$field_value = isset( $_POST[ $field ][ $post_id ] ) ? sanitize_text_field( $_POST[ $field ][ $post_id ] ) : ''; // phpcs:ignore CSRF
+			if ( $field_value !== get_post_meta( $post_id, $field, true ) ) {
+				if ( '' === $field_value ) {
+					delete_post_meta( $post_id, $field );
+				} else {
+					update_post_meta( $post_id, $field, $field_value );
+				}
+			}
 		}
 
-		// Text Field - Fee Amount
-		$product_fee_amount_text_field = $_POST['product-fee-amount'][ $post_id ];
-		if( ! empty( $product_fee_amount_text_field ) || get_post_meta( $post_id, 'product-fee-amount', true ) != '' ) {
-			update_post_meta( $post_id, 'product-fee-amount', esc_attr( $product_fee_amount_text_field ) );
-			$another_field_updated = true;
-		}
-
-		// Only save if one of the other fields is being saved.
-		if ( $another_field_updated ) {
-			// Check Box - Fee Multiply Option
-			$product_fee_multiplier_checkbox = isset( $_POST['product-fee-multiplier'][ $post_id ] ) ? 'yes' : 'no';
-			update_post_meta( $post_id, 'product-fee-multiplier', $product_fee_multiplier_checkbox );
+		$product_fee_multiplier_checkbox = isset( $_POST['product-fee-multiplier'][ $post_id ] ) ? 'yes' : ''; // phpcs:ignore CSRF
+		if ( $product_fee_multiplier_checkbox !== get_post_meta( $post_id, 'product-fee-multiplier', true ) ) {
+			if ( '' === $product_fee_multiplier_checkbox ) {
+				delete_post_meta( $post_id, 'product-fee-multiplier' );
+			} else {
+				update_post_meta( $post_id, 'product-fee-multiplier', $product_fee_multiplier_checkbox );
+			}
 		}
 	}
 
