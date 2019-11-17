@@ -111,8 +111,9 @@ class WooCommerce_Product_Fees {
 		if ( $this->product_contains_fee_data( $item['id'] ) ) {
 			$fee_data = array(
 				'name'       => get_post_meta( $item['id'], 'product-fee-name', true ),
-				'amount'     =>	get_post_meta( $item['id'], 'product-fee-amount', true ),
-				'multiplier' => get_post_meta( $item['id'], 'product-fee-multiplier', true )
+				'amount'     => get_post_meta( $item['id'], 'product-fee-amount', true ),
+				'multiplier' => get_post_meta( $item['id'], 'product-fee-multiplier', true ),
+				'tax_class'  => $this->get_fee_tax_class( $item['tax_status'], $item['tax_class'] )
 			);
 
 			$fee_data['amount'] = $this->make_percentage_adjustments( $fee_data['amount'], $item['price'] );
@@ -153,7 +154,7 @@ class WooCommerce_Product_Fees {
 	 * @param object $product WC Cart item object.
 	 * @return string $fee_tax_class Which tax class to use for the fee.
 	 */
-	public function get_fee_tax_class( $product ) {
+	public function get_fee_tax_class( $tax_status, $tax_class ) {
 		$fee_tax_class = get_option( 'wcpf_fee_tax_class', '_no_tax' );
 
 		if ( ! wc_tax_enabled() ) {
@@ -162,8 +163,8 @@ class WooCommerce_Product_Fees {
 
 		// Change fee tax settings to the product's tax settings.
 		if ( 'inherit_product_tax' === $fee_tax_class ) {
-			if ( 'taxable' === $product->get_tax_status() ) {
-				$fee_tax_class = $product->get_tax_class();
+			if ( 'taxable' === $tax_status ) {
+				$fee_tax_class = $tax_class;
 			} else {
 				$fee_tax_class = '_no_tax';
 			}
@@ -193,23 +194,24 @@ class WooCommerce_Product_Fees {
 				'variation_id' => $item['variation_id'],
 				'parent_id'    => $item['data']->get_parent_id(),
 				'qty'          => $item['quantity'],
-				'price'        => $item['data']->get_price()
+				'price'        => $item['data']->get_price(),
+				'tax_status'   => $item['data']->get_tax_status(),
+				'tax_class'    => $item['data']->get_tax_class()
 			);
 
 			$fee = $this->get_fee_data( $item_data );
 
 			if ( $fee ) {
 				$fee_id        = strtolower( $fee['name'] );
-				$fee_tax_class = $this->get_fee_tax_class( $item['data'] );
 
 				if ( array_key_exists( $fee_id, $fees ) && 'combine' === get_option( 'wcpf_name_conflicts', 'combine' ) ) {
 					$fees[$fee_id]['amount'] += $fee['amount'];
 				} else {
 					$fees[$fee_id] = apply_filters( 'wcpf_filter_fee_data', array(
-						'name' => $fee['name'],
-						'amount' => $fee['amount'],
-						'taxable' => ( '_no_tax' === $fee_tax_class ) ? false : true,
-						'tax_class' => $fee_tax_class
+						'name'      => $fee['name'],
+						'amount'    => $fee['amount'],
+						'taxable'   => ( '_no_tax' === $fee['tax_class'] ) ? false : true,
+						'tax_class' => $fee['tax_class']
 					), $item_data );
 				}
 			}
