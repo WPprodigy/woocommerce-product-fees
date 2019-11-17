@@ -138,7 +138,8 @@ class WCPF_Admin_Global_Settings {
 	}
 
 	public function save_coupon_setting( $post_id, $coupon ) {
-		$value = isset( $_POST['wcpf_coupon_remove_fees'] ) ? 'yes' : '';
+		// Nonce handled in WC core before this point.
+		$value = isset( $_POST['wcpf_coupon_remove_fees'] ) ? 'yes' : ''; // phpcs:ignore CSRF
 
 		$coupon->add_meta_data( 'wcpf_coupon_remove_fees', $value, true );
 		$coupon->save_meta_data();
